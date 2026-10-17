@@ -25,7 +25,7 @@ $shadow:       0 8px 28px rgba(0, 0, 0, if($is-dark, 0.45, 0.22));
 
 // Menu bar text sits on the wallpaper, so it is white in both variants
 // unless the light variant's frosted bar is opaque enough for dark text.
-$panel-bg: if($is-dark, rgba(0, 0, 0, 0.22), rgba(255, 255, 255, 0.55));
+$panel-bg: if($is-dark, rgba(0, 0, 0, 0.30), rgba(246, 246, 248, 0.78));
 $panel-fg: if($is-dark, #ffffff, rgba(0, 0, 0, 0.85));
 
 @import url("resource:///org/gnome/shell/theme/gnome-shell-#{$variant}.css");

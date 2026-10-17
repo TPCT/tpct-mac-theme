@@ -159,6 +159,8 @@ if [[ -d "$BMS" ]]; then
     # shellcheck disable=SC2086
     gsettings --schemadir "$BMS" set $P $kv 2>/dev/null || true
   done
+  # Let the theme's frosted menu bar show through instead of a darkened blur.
+  gsettings --schemadir "$BMS" set org.gnome.shell.extensions.blur-my-shell.panel override-background false 2>/dev/null || true
   # Same problem behind the dock: its blur is not clipped to the dock's corners.
   gsettings --schemadir "$BMS" set org.gnome.shell.extensions.blur-my-shell.dash-to-dock blur false 2>/dev/null || true
 fi

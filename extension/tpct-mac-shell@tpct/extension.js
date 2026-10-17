@@ -519,6 +519,56 @@ export default class TpctMacShell extends Extension {
         }
         if (this._interface.get_string('gtk-theme').startsWith('TPCT-Mac'))
             this._interface.set_string('gtk-theme', `TPCT-Mac-${variant}`);
+        if (this._interface.get_string('icon-theme').startsWith('WhiteSur'))
+            this._interface.set_string('icon-theme', dark ? 'WhiteSur-dark' : 'WhiteSur-light');
+
+        // Other extensions keep their own colors; keep them in step.
+        const extSettings = (uuid, schemaId) => {
+            const ext = Main.extensionManager.lookup(uuid);
+            if (!ext)
+                return null;
+            try {
+                const src = Gio.SettingsSchemaSource.new_from_directory(
+                    `${ext.path}/schemas`, Gio.SettingsSchemaSource.get_default(), false);
+                const schema = src.lookup(schemaId, true);
+                return schema ? new Gio.Settings({settings_schema: schema}) : null;
+            } catch (e) {
+                return null;
+            }
+        };
+        const tuple = (...v) => new GLib.Variant('(dddd)', v);
+        const d2d = extSettings('dash2dock-lite@icedman.github.com', 'org.gnome.shell.extensions.dash2dock-lite');
+        if (d2d) {
+            d2d.set_value('background-color', dark ? tuple(0.17, 0.17, 0.19, 0.55) : tuple(0.97, 0.97, 0.98, 0.55));
+            d2d.set_value('running-indicator-color', dark ? tuple(1, 1, 1, 0.85) : tuple(0, 0, 0, 0.75));
+        }
+        // Blur my Shell would replace the menu bar's background with a darkened
+        // blur; let the theme's frosted bar show and brighten the blur in Light.
+        const bmsPanel = extSettings('blur-my-shell@aunetx', 'org.gnome.shell.extensions.blur-my-shell.panel');
+        if (bmsPanel) {
+            bmsPanel.set_boolean('override-background', false);
+            bmsPanel.set_double('brightness', dark ? 0.6 : 1.0);
+        }
+
+        // Qt (Kvantum) and Spotlight (Ulauncher) themes
+        const config = GLib.get_user_config_dir();
+        const kv = GLib.build_filenamev([config, 'Kvantum', 'kvantum.kvconfig']);
+        if (GLib.file_test(kv, GLib.FileTest.EXISTS)) {
+            const [, bytes] = GLib.file_get_contents(kv);
+            if (new TextDecoder().decode(bytes).includes('TPCT-Mac'))
+                GLib.file_set_contents(kv, `[General]\ntheme=TPCT-Mac-${variant}\n`);
+        }
+        const ul = GLib.build_filenamev([config, 'ulauncher', 'settings.json']);
+        if (GLib.file_test(ul, GLib.FileTest.EXISTS)) {
+            try {
+                const [, bytes] = GLib.file_get_contents(ul);
+                const data = JSON.parse(new TextDecoder().decode(bytes));
+                if (String(data['theme-name'] ?? '').startsWith('tpct-spotlight')) {
+                    data['theme-name'] = `tpct-spotlight-${variant.toLowerCase()}`;
+                    GLib.file_set_contents(ul, JSON.stringify(data, null, 4));
+                }
+            } catch (e) {}
+        }
     }
 
     disable() {
