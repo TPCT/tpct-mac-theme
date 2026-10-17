@@ -40,13 +40,13 @@
   background-color: rgba(30, 30, 34, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
 }
 .tpct-widgets-light .tpct-widget {
   background-color: rgba(255, 255, 255, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.70);
   color: rgba(0, 0, 0, 0.85);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 .tpct-widget-clock { padding: 0; }
 
@@ -126,7 +126,7 @@
 .tpct-force-quit-row:checked { background-color: #0a84ff; color: #ffffff; }
 
 /* Widget being dragged */
-.tpct-widget:dragging { box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45); }
+.tpct-widget:dragging { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35); }
 
 /* Traffic lights in the menu bar for a maximized window */
 .tpct-window-buttons { spacing: 8px; padding: 0 8px 0 4px; }

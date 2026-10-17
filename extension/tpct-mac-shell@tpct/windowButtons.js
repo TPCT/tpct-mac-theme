@@ -9,7 +9,9 @@ import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 export class WindowButtons {
-    constructor() {
+    // onShown(visible) lets the caller hide the  button while these show.
+    constructor(onShown = () => {}) {
+        this._onShown = onShown;
         this._box = new St.BoxLayout({
             style_class: 'tpct-window-buttons',
             y_align: Clutter.ActorAlign.CENTER,
@@ -34,8 +36,8 @@ export class WindowButtons {
         button('minimize', 'window-minimize-symbolic', w => w.minimize());
         button('maximize', 'window-restore-symbolic', w => w.unmaximize());
 
-        // Right after the  button (index 0 of the left box).
-        Main.panel._leftBox.insert_child_at_index(this._box, 1);
+        // At the far left, where the  button sits; it is hidden while these show.
+        Main.panel._leftBox.insert_child_at_index(this._box, 0);
 
         this._windowSignals = [];
         this._focusId = global.display.connect('notify::focus-window', () => this._track());
@@ -67,10 +69,16 @@ export class WindowButtons {
 
     _sync() {
         const w = this._window;
-        this._box.visible = !!w && w.is_maximized() && !Main.overview.visible;
+        const visible = !!w && w.is_maximized() && !Main.overview.visible;
+        if (visible !== this._box.visible || this._shownOnce !== true) {
+            this._box.visible = visible;
+            this._shownOnce = true;
+            this._onShown(visible);
+        }
     }
 
     destroy() {
+        this._onShown(false);
         this._windowSignals.forEach(([w, id]) => w.disconnect(id));
         global.display.disconnect(this._focusId);
         this._overviewIds.forEach(id => Main.overview.disconnect(id));

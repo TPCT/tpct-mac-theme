@@ -480,7 +480,10 @@ export default class TpctMacShell extends Extension {
         syncExtensions();
         this._extStateId = Main.extensionManager.connect('extension-state-changed', syncExtensions);
 
-        this._windowButtons = new WindowButtons();
+        this._windowButtons = new WindowButtons(shown => {
+            if (this._appleMenu)
+                this._appleMenu.container.visible = !shown;
+        });
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
 
