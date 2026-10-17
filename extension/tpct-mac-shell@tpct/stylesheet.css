@@ -29,3 +29,54 @@
 .tpct-appmenu-menu .popup-menu-content {
   min-width: 220px;
 }
+
+/* ───────────── Desktop widgets ───────────── */
+
+.tpct-widget {
+  border-radius: 22px;
+  padding: 14px 16px;
+}
+.tpct-widgets-dark .tpct-widget {
+  background-color: rgba(30, 30, 34, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+}
+.tpct-widgets-light .tpct-widget {
+  background-color: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.70);
+  color: rgba(0, 0, 0, 0.85);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+.tpct-widget-clock { padding: 0; }
+
+.tpct-widget-caption { font-size: 11px; font-weight: 600; opacity: 0.6; }
+
+/* Calendar */
+.tpct-widget-calendar { spacing: 14px; }
+.tpct-cal-today { width: 110px; }
+.tpct-cal-weekday { color: #ff3b30; font-size: 12px; font-weight: 700; }
+.tpct-cal-day { font-size: 44px; font-weight: 300; }
+.tpct-cal-note { font-size: 11px; opacity: 0.55; }
+.tpct-cal-month-name { color: #ff3b30; font-size: 11px; font-weight: 700; padding-bottom: 4px; }
+.tpct-cal-head { font-size: 9px; font-weight: 700; opacity: 0.5; }
+.tpct-cal-cell { font-size: 10px; font-weight: 600; min-width: 18px; min-height: 16px; text-align: center; border-radius: 999px; }
+.tpct-cal-cell-today { background-color: #ff3b30; color: #ffffff; }
+
+/* Battery */
+.tpct-widget-battery { spacing: 6px; }
+.tpct-battery-percent { font-size: 18px; font-weight: 700; }
+
+/* Weather — blue sky card like macOS */
+.tpct-widgets-dark .tpct-widget-weather,
+.tpct-widgets-light .tpct-widget-weather {
+  background-gradient-direction: vertical;
+  background-gradient-start: #2d7fe0;
+  background-gradient-end: #6fb3f2;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+.tpct-weather-city { font-size: 13px; font-weight: 700; }
+.tpct-weather-temp { font-size: 40px; font-weight: 300; }
+.tpct-weather-icon { color: #ffffff; padding-bottom: 2px; }
+.tpct-weather-summary { font-size: 11px; font-weight: 600; }

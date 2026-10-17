@@ -14,6 +14,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {AppMenuRegistrar, DbusMenuSource, GtkMenuSource} from './menuSources.js';
+import {DesktopWidgets} from './widgets.js';
 
 const FINDER_IDS = ['org.gnome.Nautilus.desktop', 'nautilus.desktop'];
 
@@ -446,6 +447,7 @@ export default class TpctMacShell extends Extension {
         this._activities?.container.hide();
 
         this._globalMenu = new GlobalMenu();
+        this._widgets = new DesktopWidgets();
 
         // Follow the system Light/Dark switch, like macOS Appearance.
         this._interface = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
@@ -473,6 +475,8 @@ export default class TpctMacShell extends Extension {
         this._schemeId = 0;
         this._interface = null;
 
+        this._widgets?.destroy();
+        this._widgets = null;
         this._globalMenu?.destroy();
         this._globalMenu = null;
 
