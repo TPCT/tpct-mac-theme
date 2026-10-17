@@ -720,3 +720,12 @@ window.maximized headerbar windowcontrols > button.image-button:not(.titlebutton
   opacity: 0;
   -gtk-icon-size: 0;
 }
+
+// X11 app frames: the title bar fills the frame edge to edge (no strips of
+// window background around it).
+window.ssd-frame { background-color: $headerbar_bg_color; padding: 0; }
+window.ssd-frame > *, window.ssd-frame headerbar {
+  margin: 0;
+  box-shadow: none;
+}
+window.ssd-frame headerbar { padding: 0 8px; }
