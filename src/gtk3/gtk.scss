@@ -495,3 +495,46 @@ menu, .menu, .context-menu,
 menu menuitem, .menu menuitem, .context-menu menuitem { min-height: 22px; padding: 3px 10px; }
 menu arrow { min-width: 12px; min-height: 12px; color: $fg-dim; }
 menu menuitem:hover arrow { color: #ffffff; }
+
+// ───────────────────────── Alerts (message dialogs) ─────────────────────────
+// macOS alerts: no title bar, rounded sheet, separate pill buttons with spacing.
+messagedialog.csd headerbar, messagedialog .titlebar, messagedialog.csd .titlebar,
+dialog.csd > headerbar.titlebar:not(.default-decoration) {
+  min-height: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 16px 16px 0 0;
+  background: c(dialog);
+  box-shadow: none;
+}
+messagedialog.csd decoration, messagedialog decoration { border-radius: 16px; }
+messagedialog, messagedialog.background, messagedialog .dialog-vbox {
+  background-color: c(dialog);
+  border-radius: 16px;
+}
+messagedialog .dialog-vbox { padding: 18px 18px 4px 18px; }
+messagedialog label.title { font-size: 13px; font-weight: 700; }
+messagedialog .message-area { padding: 6px 12px 10px 12px; }
+messagedialog .dialog-action-area,
+messagedialog.csd .dialog-action-area {
+  padding: 4px 16px 16px 16px;
+  border-spacing: 10px;
+  border-top: none;
+  background: transparent;
+}
+messagedialog .dialog-action-area button,
+messagedialog.csd .dialog-action-area button,
+messagedialog.csd .dialog-action-area button:first-child,
+messagedialog.csd .dialog-action-area button:last-child {
+  min-height: 28px;
+  padding: 2px 14px;
+  margin: 0;
+  border-radius: 999px;
+  border: none;
+  background-color: c(fill-active);
+  box-shadow: none;
+  font-weight: 500;
+}
+messagedialog .dialog-action-area button:hover { background-color: c(fill-hover); }
+messagedialog .dialog-action-area button.suggested-action,
+messagedialog .dialog-action-area button.default { background-color: $accent; color: #ffffff; }
