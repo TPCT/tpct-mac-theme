@@ -93,7 +93,7 @@ D=org.gnome.shell.extensions.dash-to-dock
 if gsettings list-schemas | grep -qx "$D"; then
   gset $D dock-position 'BOTTOM'
   gset $D extend-height false
-  gset $D dash-max-icon-size 48
+  gset $D dash-max-icon-size 36
   gset $D apply-custom-theme false
   gset $D custom-theme-shrink true
   gset $D transparency-mode 'DEFAULT'

@@ -268,9 +268,11 @@ stage {
 #dashtodockContainer .dash-background {
   background-color: if($is-dark, rgba(44, 44, 48, 0.62), rgba(246, 246, 248, 0.55));
   border: 1px solid if($is-dark, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.55));
-  border-radius: 22px;
+  border-radius: 18px;
   box-shadow: none;
 }
+#dashtodockContainer .dash-background { padding: 4px 6px; }
+#dashtodockContainer #dash { padding: 0 4px; }
 #dash .dash-item-container .overview-tile .overview-icon,
 #dash .dash-item-container .show-apps .overview-icon {
   background-color: transparent;
