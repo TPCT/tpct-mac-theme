@@ -33,6 +33,9 @@ start)
   ln -sfn "$ROOT/dist/TPCT-Mac-Dark" "$HL/data/themes/TPCT-Mac-Dark"
   ln -sfn "$ROOT/dist/TPCT-Mac-Light" "$HL/data/themes/TPCT-Mac-Light"
   ln -sfn "$HOME/.local/share/fonts" "$HL/data/fonts"
+  # Apps inside the test session use the installed GTK layers.
+  ln -sfn "$HOME/.config/gtk-4.0" "$HL/config/gtk-4.0"
+  ln -sfn "$HOME/.config/gtk-3.0" "$HL/config/gtk-3.0"
   ln -sfn "$HOME/.local/share/backgrounds" "$HL/data/backgrounds"
   rm -f "$ADDR_FILE"
   Variant=$([ "$scheme" = dark ] && echo Dark || echo Light)
@@ -44,6 +47,8 @@ start)
     gsettings set org.gnome.shell.extensions.user-theme name "TPCT-Mac-'"$Variant"'"
     gsettings set org.gnome.desktop.interface color-scheme "prefer-'"$scheme"'"
     gsettings set org.gnome.desktop.interface icon-theme "WhiteSur-'"$scheme"'"
+    gsettings set org.gnome.desktop.interface gtk-theme "TPCT-Mac-'"$Variant"'"
+    gsettings set org.gnome.desktop.interface cursor-theme McMojave-cursors
     gsettings set org.gnome.desktop.interface font-name "Inter Variable 10.5"
     gsettings set org.gnome.desktop.wm.preferences button-layout "close,minimize,maximize:"
     gsettings set org.gnome.desktop.background picture-uri "file://'"$HOME"'/.local/share/backgrounds/WhiteSur/WhiteSur-light.jpg"
@@ -57,6 +62,9 @@ start)
     gsettings set org.gnome.desktop.interface clock-format 12h
     gsettings set org.gnome.desktop.interface clock-show-weekday true
     gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode DEFAULT
+    BMS="'"$HOME"'/.local/share/gnome-shell/extensions/blur-my-shell@aunetx/schemas"
+    [ -d "$BMS" ] && gsettings --schemadir "$BMS" set org.gnome.shell.extensions.blur-my-shell.popup blur false
+    [ -d "$BMS" ] && gsettings --schemadir "$BMS" set org.gnome.shell.extensions.blur-my-shell.dash-to-dock blur false
     exec gnome-shell --headless --virtual-monitor 1920x1080 --wayland-display wayland-tpct-test --no-x11
   ' > "$HL/shell.log" 2>&1 &
   echo $! > "$PID_FILE"

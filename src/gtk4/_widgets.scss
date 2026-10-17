@@ -633,3 +633,42 @@ window.ssd headerbar, window.ssd-frame headerbar, .titlebar.default-decoration {
   padding: 0 8px;
 }
 headerbar.default-decoration .title { font-size: 13px; font-weight: 700; }
+
+
+// ───────────────────────── System Settings sidebar ─────────────────────────
+// Rows whose icon sits directly in the row box (GNOME Settings) get macOS
+// colored icon tiles; Finder's rows (icon inside a revealer) keep blue glyphs.
+.navigation-sidebar > row { min-height: 30px; padding-top: 0; padding-bottom: 0; }
+// Settings sets 12px margins on its row boxes in code; trim them from CSS.
+.navigation-sidebar > row:not(.sidebar-row) > *:not(revealer) { margin-top: -5px; margin-bottom: -5px; }
+// Finder's rows wrap their content in a revealer; only Settings-style rows get tiles.
+.navigation-sidebar > row > :not(revealer) image {
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0;
+  -gtk-icon-size: 14px;
+  border-radius: 6px;
+  color: #ffffff;
+  background-color: #8e8e93;
+}
+.navigation-sidebar > row:nth-child(1) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(2) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(3) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(4) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(5) > :not(revealer) image { background-color: #ff2d55; }
+.navigation-sidebar > row:nth-child(6) > :not(revealer) image { background-color: #34c759; }
+.navigation-sidebar > row:nth-child(7) > :not(revealer) image { background-color: #5e5ce6; }
+.navigation-sidebar > row:nth-child(8) > :not(revealer) image { background-color: #3a3a3c; }
+.navigation-sidebar > row:nth-child(9) > :not(revealer) image { background-color: #8e8e93; }
+.navigation-sidebar > row:nth-child(10) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(11) > :not(revealer) image { background-color: #ff3b30; }
+.navigation-sidebar > row:nth-child(12) > :not(revealer) image { background-color: #8e8e93; }
+.navigation-sidebar > row:nth-child(13) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(14) > :not(revealer) image { background-color: #8e8e93; }
+.navigation-sidebar > row:nth-child(15) > :not(revealer) image { background-color: #8e8e93; }
+.navigation-sidebar > row:nth-child(16) > :not(revealer) image { background-color: #8e8e93; }
+.navigation-sidebar > row:nth-child(17) > :not(revealer) image { background-color: #ff9f0a; }
+.navigation-sidebar > row:nth-child(18) > :not(revealer) image { background-color: #8e8e93; }
+.navigation-sidebar > row:nth-child(19) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(20) > :not(revealer) image { background-color: #0a84ff; }
+.navigation-sidebar > row:nth-child(21) > :not(revealer) image { background-color: #8e8e93; }

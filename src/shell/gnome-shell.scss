@@ -456,3 +456,9 @@ stage {
   border: 1px solid $glass-border !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
 }
+
+// Cmd+Tab: icons only; the name shows under the selected app, like macOS.
+.switcher-list .item-box StLabel { color: transparent; }
+.switcher-list .item-box:selected StLabel { color: $fg; }
+.switcher-list .item-box { padding: 8px; }
+.switcher-list .item-box:selected { background-color: $tile-active; border-radius: 14px; }

@@ -39,6 +39,9 @@ PY
   rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}/Kvantum/TPCT-Mac-"* "$HOME/.config/environment.d/90-tpct-mac-qt.conf"
   grep -l '^X-TPCT-Mac=true' "$HOME/.local/share/applications"/*.desktop 2>/dev/null | xargs -r rm -f
   gsettings reset org.gnome.desktop.wm.keybindings switch-input-source
+  gsettings reset org.gnome.shell.keybindings screenshot
+  gsettings reset org.gnome.shell.keybindings show-screenshot-ui
+  gsettings reset org.gnome.desktop.wm.keybindings close
   gsettings reset org.gnome.desktop.wm.keybindings switch-input-source-backward
   echo "Removed. Log out and back in to finish."
   exit 0
@@ -105,6 +108,11 @@ if grep -qiE 'SF Pro|Inter' <<<"$families"; then
 else
   echo "  Tip: install the Inter font (closest free match to SF Pro): sudo apt install fonts-inter"
 fi
+
+# macOS shortcuts with Super as ⌘: ⌘⇧3 full screenshot, ⌘⇧4/⌘⇧5 screenshot UI, ⌘W close window.
+gset org.gnome.shell.keybindings screenshot "['<Shift><Super>3', '<Shift>Print']"
+gset org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>4', '<Shift><Super>5', 'Print']"
+gset org.gnome.desktop.wm.keybindings close "['<Super>w', '<Alt>F4']"
 
 # Dock (Ubuntu Dock / Dash to Dock): let the theme draw it.
 D=org.gnome.shell.extensions.dash-to-dock
