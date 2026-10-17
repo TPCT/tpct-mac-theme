@@ -130,6 +130,24 @@ if gsettings list-schemas | grep -qx "$D"; then
   gset $D click-action 'minimize-or-previews'
 fi
 
+# macOS dock with magnification (Dash2Dock Animated) and the Genie minimize
+# effect (Magic Lamp), if installed. The TPCT extension turns the Ubuntu dock
+# off once Dash2Dock is running.
+D2D="$EXTDIR/dash2dock-lite@icedman.github.com/schemas"
+if [[ -d "$D2D" ]]; then
+  K=org.gnome.shell.extensions.dash2dock-lite
+  for kv in "dock-location 0" "animation-magnify 0.5" "animation-spread 0.75" "open-app-animation true" \
+            "trash-icon true" "apps-icon false" "icon-shadow true" "border-radius 4.0" \
+            "background-color (0.17, 0.17, 0.19, 0.55)" "running-indicator-color (1.0, 1.0, 1.0, 0.85)" \
+            "separator-thickness 1" "lamp-app-animation false"; do
+    # shellcheck disable=SC2086
+    gsettings --schemadir "$D2D" set $K ${kv%% *} "${kv#* }" 2>/dev/null || true
+  done
+  enable_extension "dash2dock-lite@icedman.github.com"
+fi
+[[ -d "$EXTDIR/compiz-alike-magic-lamp-effect@hermes83.github.com" ]] &&
+  enable_extension "compiz-alike-magic-lamp-effect@hermes83.github.com"
+
 # Blur my Shell: match the theme's corner radii and keep its colors.
 BMS="$EXTDIR/blur-my-shell@aunetx/schemas"
 if [[ -d "$BMS" ]]; then

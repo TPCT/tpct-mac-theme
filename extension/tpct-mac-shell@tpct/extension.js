@@ -466,9 +466,18 @@ export default class TpctMacShell extends Extension {
         this._appleMenu = new AppleMenu();
         Main.panel.addToStatusArea('tpctAppleMenu', this._appleMenu, 0, 'left');
         // Logo Menu draws a second  button; hide it whenever it shows up.
-        const hideLogoMenu = () => Main.panel.statusArea.LogoMenu?.container.hide();
-        hideLogoMenu();
-        this._extStateId = Main.extensionManager.connect('extension-state-changed', hideLogoMenu);
+        // Dash2Dock Animated is the macOS dock (magnification); when it runs,
+        // switch the Ubuntu dock off so there is only one.
+        const syncExtensions = () => {
+            Main.panel.statusArea.LogoMenu?.container.hide();
+            const mgr = Main.extensionManager;
+            const d2d = mgr.lookup('dash2dock-lite@icedman.github.com');
+            const ubuntuDock = mgr.lookup('ubuntu-dock@ubuntu.com');
+            if (d2d?.state === 1 && ubuntuDock?.state === 1)
+                mgr.disableExtension('ubuntu-dock@ubuntu.com');
+        };
+        syncExtensions();
+        this._extStateId = Main.extensionManager.connect('extension-state-changed', syncExtensions);
 
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();

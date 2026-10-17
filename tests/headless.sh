@@ -26,7 +26,7 @@ start)
   mkdir -p "$ext/tpct-debug@tpct"
   echo '{"uuid":"tpct-debug@tpct","name":"tpct debug","description":"test helper","shell-version":["48","49","50"]}' > "$ext/tpct-debug@tpct/metadata.json"
   printf 'export default class TpctDebug {\n    enable() { global.context.unsafe_mode = true; }\n    disable() {}\n}\n' > "$ext/tpct-debug@tpct/extension.js"
-  for e in blur-my-shell@aunetx logomenu@aryan_k; do
+  for e in blur-my-shell@aunetx logomenu@aryan_k dash2dock-lite@icedman.github.com compiz-alike-magic-lamp-effect@hermes83.github.com; do
     [ -e "$HOME/.local/share/gnome-shell/extensions/$e" ] && ln -sfn "$HOME/.local/share/gnome-shell/extensions/$e" "$ext/$e"
   done
   [ -d "$ROOT/extension/tpct-mac-shell@tpct" ] && ln -sfn "$ROOT/extension/tpct-mac-shell@tpct" "$ext/tpct-mac-shell@tpct"
@@ -43,7 +43,7 @@ start)
   setsid dbus-run-session -- bash -c '
     echo "$DBUS_SESSION_BUS_ADDRESS" > "'"$ADDR_FILE"'"
     gsettings set org.gnome.shell disable-user-extensions false
-    gsettings set org.gnome.shell enabled-extensions "[\"tpct-debug@tpct\",\"user-theme@gnome-shell-extensions.gcampax.github.com\",\"ubuntu-dock@ubuntu.com\",\"blur-my-shell@aunetx\",\"tpct-mac-shell@tpct\"]"
+    gsettings set org.gnome.shell enabled-extensions "[\"tpct-debug@tpct\",\"user-theme@gnome-shell-extensions.gcampax.github.com\",\"ubuntu-dock@ubuntu.com\",\"blur-my-shell@aunetx\",\"tpct-mac-shell@tpct\",\"dash2dock-lite@icedman.github.com\",\"compiz-alike-magic-lamp-effect@hermes83.github.com\"]"
     gsettings set org.gnome.shell.extensions.user-theme name "TPCT-Mac-'"$Variant"'"
     gsettings set org.gnome.desktop.interface color-scheme "prefer-'"$scheme"'"
     gsettings set org.gnome.desktop.interface icon-theme "WhiteSur-'"$scheme"'"

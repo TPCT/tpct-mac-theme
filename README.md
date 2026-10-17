@@ -39,7 +39,7 @@ Log out and back in once so GNOME Shell loads the extension.
 Recommended companions (installed separately):
 - Icons: [WhiteSur icon theme](https://github.com/vinceliuice/WhiteSur-icon-theme), cursors: McMojave
 - Font: [Inter](https://rsms.me/inter/) (`sudo apt install fonts-inter`); SF Pro is used automatically if you have it
-- Extensions: [Blur my Shell](https://extensions.gnome.org/extension/3193/blur-my-shell/), [Logo Menu](https://extensions.gnome.org/extension/4451/logo-menu/)
+- Extensions: [Blur my Shell](https://extensions.gnome.org/extension/3193/blur-my-shell/); [Dash2Dock Animated](https://extensions.gnome.org/extension/4994/dash2dock-lite/) for the magnifying macOS dock (the Ubuntu dock is switched off automatically); [Compiz alike magic lamp effect](https://extensions.gnome.org/extension/3740/compiz-alike-magic-lamp-effect/) for the Genie minimize animation
 - Weather widget: GNOME Weather (`sudo apt install gnome-weather`) with a city selected
 
 Remove with `./install.sh --remove`.
