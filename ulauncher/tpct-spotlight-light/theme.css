@@ -1,0 +1,50 @@
+@import url("./reset.css");
+
+/* macOS Spotlight */
+@define-color selected_bg_color #0a84ff;
+@define-color caret_color #0a84ff;
+
+* { font-family: "SF Pro Text", "Inter Variable", "Inter", sans-serif; }
+
+.app {
+    background-color: rgba(246, 246, 248, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 26px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    padding: 4px 6px;
+}
+
+.input {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 22px;
+    font-weight: 400;
+    padding: 10px 12px;
+}
+
+.input *:selected, .input *:focus, *:selected:focus {
+    background-color: alpha(@selected_bg_color, 0.35);
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.result-box { padding: 4px 6px 8px 6px; }
+
+.item-box {
+    border-radius: 10px;
+    padding: 4px 8px;
+}
+.item-name { color: rgba(0, 0, 0, 0.85); font-size: 14px; font-weight: 500; }
+.item-text { color: rgba(0, 0, 0, 0.5); font-size: 12px; }
+.item-shortcut { color: rgba(0, 0, 0, 0.5); font-size: 11px; }
+
+.selected.item-box {
+    background-color: #0a84ff;
+    border: none;
+}
+.selected.item-box .item-name,
+.selected.item-box .item-text,
+.selected.item-box .item-shortcut { color: #ffffff; }
+
+.prefs-btn { opacity: 0.6; border-radius: 999px; }
+.prefs-btn:hover { opacity: 1; background-color: alpha(@selected_bg_color, 0.2); }
+
+.no-window-shadow { margin: -20px; }

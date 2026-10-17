@@ -31,6 +31,9 @@ if [[ "${1:-}" == "--remove" ]]; then
   done
   gsettings reset org.gnome.shell.extensions.user-theme name 2>/dev/null || true
   gsettings reset org.gnome.desktop.interface gtk-theme
+  grep -l '^X-TPCT-Mac=true' "$HOME/.local/share/applications"/*.desktop 2>/dev/null | xargs -r rm -f
+  gsettings reset org.gnome.desktop.wm.keybindings switch-input-source
+  gsettings reset org.gnome.desktop.wm.keybindings switch-input-source-backward
   echo "Removed. Log out and back in to finish."
   exit 0
 fi
@@ -111,6 +114,75 @@ if [[ -d "$BMS" ]]; then
     gsettings --schemadir "$BMS" set $P $kv 2>/dev/null || true
   done
 fi
+
+# Spotlight: Ulauncher with the macOS Spotlight theme on Super(⌘)+Space.
+if have ulauncher; then
+  UL="${XDG_CONFIG_HOME:-$HOME/.config}/ulauncher"
+  mkdir -p "$UL/user-themes"
+  for t in ulauncher/*/; do rm -rf "$UL/user-themes/$(basename "$t")"; cp -r "$t" "$UL/user-themes/"; done
+  python3 - "$UL/settings.json" "tpct-spotlight-$v" <<'PY'
+import json, os, sys
+path, theme = sys.argv[1], sys.argv[2]
+try:
+    data = json.load(open(path))
+except (OSError, ValueError):
+    data = {}
+# The GNOME shortcut opens it; its own X11 hotkey would steal Ctrl+Space from apps.
+data.update({"theme-name": theme, "show-indicator-icon": False,
+             "render-on-screen": "default-monitor", "hotkey-show-app": ""})
+json.dump(data, open(path, "w"), indent=4)
+PY
+  mkdir -p "$HOME/.config/autostart"
+  [[ -f /usr/share/applications/ulauncher.desktop ]] && cp /usr/share/applications/ulauncher.desktop "$HOME/.config/autostart/"
+  # ⌘+Space opens Spotlight; keyboard layout switching moves to Alt+Shift.
+  MK=org.gnome.settings-daemon.plugins.media-keys
+  KB=/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/tpct-spotlight/
+  list=$(gsettings get $MK custom-keybindings)
+  if [[ "$list" != *"tpct-spotlight"* ]]; then
+    if [[ "$list" == "@as []" || "$list" == "[]" ]]; then list="['$KB']"; else list="${list%]}, '$KB']"; fi
+    gset $MK custom-keybindings "$list"
+  fi
+  gset $MK.custom-keybinding:$KB name 'Spotlight'
+  gset $MK.custom-keybinding:$KB command 'ulauncher-toggle'
+  gset $MK.custom-keybinding:$KB binding '<Super>space'
+  gset org.gnome.desktop.wm.keybindings switch-input-source "['<Alt>Shift_L', 'XF86Keyboard']"
+  gset org.gnome.desktop.wm.keybindings switch-input-source-backward "['<Shift>Alt_L']"
+fi
+
+# macOS app names (local overrides; the originals stay untouched).
+APPS="$HOME/.local/share/applications"
+mkdir -p "$APPS"
+while IFS='|' read -r id name; do
+  for dir in /usr/share/applications /var/lib/snapd/desktop/applications /var/lib/flatpak/exports/share/applications; do
+    src="$dir/$id"
+    [[ -f "$src" ]] || continue
+    # Drop translated names so the new name shows in every language.
+    sed -E -e "0,/^Name=.*/s//Name=$name/" -e '/^Name\[/d' -e '/^X-GNOME-FullName/d' "$src" > "$APPS/$id"
+    echo "X-TPCT-Mac=true" >> "$APPS/$id"
+    break
+  done
+done <<'NAMES'
+org.gnome.Nautilus.desktop|Finder
+org.gnome.Settings.desktop|System Settings
+snap-store_snap-store.desktop|App Store
+org.gnome.Software.desktop|App Store
+org.gnome.TextEditor.desktop|TextEdit
+org.gnome.Loupe.desktop|Preview
+org.gnome.Papers.desktop|Preview
+org.gnome.Ptyxis.desktop|Terminal
+org.gnome.SystemMonitor.desktop|Activity Monitor
+org.gnome.DiskUtility.desktop|Disk Utility
+org.gnome.baobab.desktop|Storage
+org.gnome.clocks.desktop|Clock
+org.gnome.Logs.desktop|Console
+org.gnome.font-viewer.desktop|Font Book
+org.gnome.Characters.desktop|Character Viewer
+org.gnome.Snapshot.desktop|Photo Booth
+org.gnome.Showtime.desktop|QuickTime Player
+org.gnome.Totem.desktop|QuickTime Player
+yelp.desktop|Tips
+NAMES
+update-desktop-database "$APPS" 2>/dev/null || true
 
 # Flatpak apps can only see the theme if allowed to read it.
 if have flatpak; then

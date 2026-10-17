@@ -16,7 +16,12 @@ A macOS-style desktop for GNOME (tested on Ubuntu 26.04 / GNOME 50): one theme f
   - Every other app gets the standard macOS set: *App*, File, Edit, View, Window
 - **Finder** menus (File, Edit, View, Go, Window) when the desktop is focused
 - Clock on the right, no Activities pill
-- **Desktop widgets**: analog clock, weather, calendar, battery
+- **Desktop widgets**: clock, weather, calendar with today's events, world clock, now playing (any MPRIS player), photos, battery
+
+**Also set up by `install.sh`**
+- Spotlight on ⌘ (Super) + Space using Ulauncher with a Spotlight theme; keyboard layout switching moves to Alt+Shift
+- macOS app names: Finder, System Settings, App Store, TextEdit, Preview, Terminal, Activity Monitor, …
+- Dock, Blur my Shell and touchpad settings
 
 ## Install
 
