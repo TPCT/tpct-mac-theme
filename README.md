@@ -21,6 +21,8 @@ A macOS-style desktop for GNOME (tested on Ubuntu 26.04 / GNOME 50): one theme f
 **Also set up by `install.sh`**
 - Spotlight on ⌘ (Super) + Space using Ulauncher with a Spotlight theme; keyboard layout switching moves to Alt+Shift
 - macOS app names: Finder, System Settings, App Store, TextEdit, Preview, Terminal, Activity Monitor, …
+- Qt apps: Kvantum theme generated from KvMojave in the TPCT Mac palette (needs `qt-style-kvantum`)
+- Firefox: Safari-style `userChrome.css` (traffic lights, rounded tabs, centered address field)
 - Dock, Blur my Shell and touchpad settings
 
 ## Install

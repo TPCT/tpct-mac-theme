@@ -1,0 +1,125 @@
+/* TPCT Mac — Safari-style Firefox.
+ * Installed into <profile>/chrome/userChrome.css by install.sh.
+ * Snap Firefox cannot read user GTK themes, so colors are set here. */
+
+:root {
+  --tpct-accent: #0088ff;
+  --tpct-toolbar: #f6f6f8;
+  --tpct-tabbar: #e8e8ec;
+  --tpct-field: rgba(0, 0, 0, 0.06);
+  --tpct-field-focus: #ffffff;
+  --tpct-fg: rgba(0, 0, 0, 0.85);
+  --tpct-dim: rgba(0, 0, 0, 0.5);
+  --tpct-border: rgba(0, 0, 0, 0.10);
+  --tpct-tab-selected: #ffffff;
+  --tpct-tab-hover: rgba(0, 0, 0, 0.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tpct-accent: #0091ff;
+    --tpct-toolbar: #2a2a2d;
+    --tpct-tabbar: #1e1e20;
+    --tpct-field: rgba(255, 255, 255, 0.10);
+    --tpct-field-focus: #1c1c1e;
+    --tpct-fg: rgba(255, 255, 255, 0.88);
+    --tpct-dim: rgba(255, 255, 255, 0.55);
+    --tpct-border: rgba(255, 255, 255, 0.10);
+    --tpct-tab-selected: #3a3a3d;
+    --tpct-tab-hover: rgba(255, 255, 255, 0.06);
+  }
+}
+
+:root {
+  --toolbar-bgcolor: var(--tpct-toolbar) !important;
+  --toolbar-color: var(--tpct-fg) !important;
+  --toolbar-field-background-color: var(--tpct-field) !important;
+  --toolbar-field-focus-background-color: var(--tpct-field-focus) !important;
+  --toolbar-field-color: var(--tpct-fg) !important;
+  --toolbar-field-focus-border-color: var(--tpct-accent) !important;
+  --lwt-accent-color: var(--tpct-tabbar) !important;
+  --lwt-text-color: var(--tpct-fg) !important;
+  --tab-selected-bgcolor: var(--tpct-tab-selected) !important;
+  --focus-outline-color: var(--tpct-accent) !important;
+  --chrome-content-separator-color: var(--tpct-border) !important;
+  --arrowpanel-border-radius: 12px !important;
+  --toolbarbutton-border-radius: 6px !important;
+  --tab-border-radius: 8px !important;
+  font-family: "SF Pro Text", "Inter Variable", "Inter", sans-serif !important;
+}
+
+/* Tab strip */
+#TabsToolbar, #titlebar {
+  background-color: var(--tpct-tabbar) !important;
+}
+.tab-background {
+  border-radius: 8px !important;
+  margin-block: 5px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected]) {
+  background-color: var(--tpct-tab-hover) !important;
+}
+.tab-background[selected] {
+  background-color: var(--tpct-tab-selected) !important;
+  box-shadow: 0 0 0 0.5px var(--tpct-border), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+}
+.tab-label { font-size: 12px !important; }
+.tabbrowser-tab .tab-label-container { justify-content: center !important; }
+.tab-close-button { border-radius: 4px !important; opacity: 0; }
+.tabbrowser-tab:hover .tab-close-button, .tabbrowser-tab[selected] .tab-close-button { opacity: 0.7; }
+
+/* Toolbar */
+#nav-bar {
+  background-color: var(--tpct-toolbar) !important;
+  border-top: none !important;
+  box-shadow: inset 0 -1px var(--tpct-border) !important;
+  padding-block: 4px !important;
+}
+
+/* Address field: centered rounded field like Safari's */
+#urlbar-background {
+  border-radius: 8px !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+#urlbar[focused] > #urlbar-background {
+  box-shadow: 0 0 0 1px var(--tpct-accent), 0 0 0 4px color-mix(in srgb, var(--tpct-accent) 35%, transparent) !important;
+}
+#urlbar:not([focused]) #urlbar-input {
+  text-align: center !important;
+}
+#urlbar-container { --urlbar-container-height: 36px !important; }
+
+/* Menus and panels */
+menupopup, panel {
+  --panel-border-radius: 12px !important;
+  --panel-padding: 5px !important;
+}
+menupopup > menuitem, menupopup > menu {
+  border-radius: 6px !important;
+  padding-block: 4px !important;
+}
+menupopup > menuitem[_moz-menuactive], menupopup > menu[_moz-menuactive] {
+  background-color: var(--tpct-accent) !important;
+  color: #ffffff !important;
+}
+
+/* Traffic-light window buttons */
+.titlebar-buttonbox { padding-inline: 8px !important; gap: 8px !important; align-items: center !important; }
+.titlebar-button {
+  padding: 0 !important;
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  border-radius: 50% !important;
+  margin: 0 !important;
+}
+.titlebar-button > .toolbarbutton-icon { opacity: 0 !important; }
+.titlebar-close { background-color: #ff5f57 !important; }
+.titlebar-min { background-color: #febc2e !important; }
+.titlebar-max, .titlebar-restore { background-color: #28c840 !important; }
+.titlebar-buttonbox:hover .titlebar-button > .toolbarbutton-icon { opacity: 0.55 !important; transform: scale(0.6); }
+:root:-moz-window-inactive .titlebar-buttonbox:not(:hover) .titlebar-button {
+  background-color: rgba(128, 128, 128, 0.4) !important;
+}

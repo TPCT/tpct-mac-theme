@@ -31,6 +31,7 @@ if [[ "${1:-}" == "--remove" ]]; then
   done
   gsettings reset org.gnome.shell.extensions.user-theme name 2>/dev/null || true
   gsettings reset org.gnome.desktop.interface gtk-theme
+  rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}/Kvantum/TPCT-Mac-"* "$HOME/.config/environment.d/90-tpct-mac-qt.conf"
   grep -l '^X-TPCT-Mac=true' "$HOME/.local/share/applications"/*.desktop 2>/dev/null | xargs -r rm -f
   gsettings reset org.gnome.desktop.wm.keybindings switch-input-source
   gsettings reset org.gnome.desktop.wm.keybindings switch-input-source-backward
@@ -183,6 +184,40 @@ org.gnome.Totem.desktop|QuickTime Player
 yelp.desktop|Tips
 NAMES
 update-desktop-database "$APPS" 2>/dev/null || true
+
+# Qt apps: Kvantum theme generated from KvMojave with the TPCT Mac palette.
+KV="${XDG_CONFIG_HOME:-$HOME/.config}/Kvantum"
+if [[ -d /usr/share/Kvantum/KvMojave ]]; then
+  mkdir -p "$KV"
+  kvantum/make-kvantum.sh "$KV"
+  printf '[General]\ntheme=TPCT-Mac-%s\n' "$V" > "$KV/kvantum.kvconfig"
+  mkdir -p "$HOME/.config/environment.d"
+  printf 'QT_STYLE_OVERRIDE=kvantum\n' > "$HOME/.config/environment.d/90-tpct-mac-qt.conf"
+else
+  echo "  Tip: for Qt apps install Kvantum: sudo apt install qt-style-kvantum"
+fi
+
+# Firefox: Safari-style userChrome in every profile.
+if have firefox; then
+  roots=("$HOME/snap/firefox/common/.mozilla/firefox" "$HOME/.mozilla/firefox")
+  found=$(find "${roots[@]}" -maxdepth 2 -name prefs.js 2>/dev/null | head -1 || true)
+  if [[ -z "$found" ]] && ! pgrep -x firefox >/dev/null; then
+    # No profile yet: let Firefox create its default one headlessly.
+    timeout 40 firefox --headless --screenshot /tmp/tpct-firefox-init.png about:blank >/dev/null 2>&1 || true
+    rm -f /tmp/tpct-firefox-init.png
+  fi
+  while IFS= read -r prefs; do
+    prof=$(dirname "$prefs")
+    mkdir -p "$prof/chrome"
+    cp firefox/userChrome.css "$prof/chrome/userChrome.css"
+    touch "$prof/user.js"
+    grep -q legacyUserProfileCustomizations "$prof/user.js" ||
+      echo 'user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);' >> "$prof/user.js"
+    grep -q 'browser.tabs.inTitlebar' "$prof/user.js" ||
+      echo 'user_pref("browser.tabs.inTitlebar", 1);' >> "$prof/user.js"
+    echo "  Firefox profile themed: $(basename "$prof")"
+  done < <(find "${roots[@]}" -maxdepth 2 -name prefs.js 2>/dev/null)
+fi
 
 # Flatpak apps can only see the theme if allowed to read it.
 if have flatpak; then
