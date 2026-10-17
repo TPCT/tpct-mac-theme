@@ -500,16 +500,9 @@ export default class TpctMacShell extends Extension {
         this._appleMenu = new AppleMenu();
         Main.panel.addToStatusArea('tpctAppleMenu', this._appleMenu, 0, 'left');
         // Logo Menu draws a second  button; hide it whenever it shows up.
-        // Dash2Dock Animated is the macOS dock (magnification); when it runs,
-        // switch the Ubuntu dock off so there is only one.
-        const syncExtensions = () => {
-            Main.panel.statusArea.LogoMenu?.container.hide();
-            const mgr = Main.extensionManager;
-            const d2d = mgr.lookup('dash2dock-lite@icedman.github.com');
-            const ubuntuDock = mgr.lookup('ubuntu-dock@ubuntu.com');
-            if (d2d?.state === 1 && ubuntuDock?.state === 1)
-                mgr.disableExtension('ubuntu-dock@ubuntu.com');
-        };
+        // (The Ubuntu dock is switched off by install.sh through
+        // disabled-extensions; disabling it at runtime leaves it half-torn-down.)
+        const syncExtensions = () => Main.panel.statusArea.LogoMenu?.container.hide();
         syncExtensions();
         this._extStateId = Main.extensionManager.connect('extension-state-changed', syncExtensions);
 
@@ -533,10 +526,13 @@ export default class TpctMacShell extends Extension {
                 searchBin.opacity = inAppGrid || searching ? 255 : 0;
                 // Launchpad shows only apps: fade the shrunken workspaces out
                 // as the app grid comes in (state 1 = Mission Control, 2 = apps).
-                const fade = Math.round(255 * (1 - Math.min(Math.max(this._overviewAdj.value - 1, 0), 1)));
-                for (const a of [controls._workspacesDisplay, controls._thumbnailsBox])
-                    if (a)
-                        a.opacity = fade;
+                // While searching, GNOME fades them itself; leave them alone.
+                if (!searching) {
+                    const fade = Math.round(255 * (1 - Math.min(Math.max(this._overviewAdj.value - 1, 0), 1)));
+                    for (const a of [controls._workspacesDisplay, controls._thumbnailsBox])
+                        if (a)
+                            a.opacity = fade;
+                }
             };
             this._overviewAdjId = this._overviewAdj.connect('notify::value', syncSearch);
             this._searchTextId = Main.overview.searchEntry.clutter_text.connect('text-changed', syncSearch);
@@ -600,7 +596,11 @@ export default class TpctMacShell extends Extension {
         const tuple = (...v) => new GLib.Variant('(dddd)', v);
         const d2d = extSettings('dash2dock-lite@icedman.github.com', 'org.gnome.shell.extensions.dash2dock-lite');
         if (d2d) {
-            d2d.set_value('background-color', dark ? tuple(0.17, 0.17, 0.19, 0.55) : tuple(0.97, 0.97, 0.98, 0.55));
+            // Frosted glass like the macOS dock: fairly opaque, thin light edge.
+            d2d.set_value('background-color', dark ? tuple(0.16, 0.16, 0.18, 0.80) : tuple(0.93, 0.93, 0.95, 0.80));
+            d2d.set_value('border-color', dark ? tuple(1, 1, 1, 0.12) : tuple(1, 1, 1, 0.65));
+            d2d.set_int('border-thickness', 1);
+            d2d.set_boolean('icon-shadow', false);
             d2d.set_value('running-indicator-color', dark ? tuple(1, 1, 1, 0.85) : tuple(0, 0, 0, 0.75));
         }
         // Blur my Shell would replace the menu bar's background with a darkened

@@ -148,13 +148,21 @@ D2D="$EXTDIR/dash2dock-lite@icedman.github.com/schemas"
 if [[ -d "$D2D" ]]; then
   K=org.gnome.shell.extensions.dash2dock-lite
   for kv in "dock-location 0" "animation-magnify 0.5" "animation-spread 0.75" "open-app-animation true" \
-            "trash-icon true" "apps-icon false" "icon-shadow true" "border-radius 4.0" \
+            "trash-icon true" "apps-icon false" "border-radius 4.0" \
             "background-color (0.17, 0.17, 0.19, 0.55)" "running-indicator-color (1.0, 1.0, 1.0, 0.85)" \
-            "separator-thickness 1" "lamp-app-animation false" "downloads-icon true"; do
+            "separator-thickness 1" "lamp-app-animation false" "downloads-icon true" \
+            "icon-shadow false" "border-thickness 1"; do
     # shellcheck disable=SC2086
     gsettings --schemadir "$D2D" set $K ${kv%% *} "${kv#* }" 2>/dev/null || true
   done
   enable_extension "dash2dock-lite@icedman.github.com"
+  # Ubuntu's dock is part of the session mode; disabled-extensions is the only
+  # reliable switch, and it takes effect at the next login.
+  dis=$(gsettings get org.gnome.shell disabled-extensions)
+  if [[ "$dis" != *"ubuntu-dock@ubuntu.com"* ]]; then
+    if [[ "$dis" == "@as []" || "$dis" == "[]" ]]; then dis="['ubuntu-dock@ubuntu.com']"; else dis="${dis%]}, 'ubuntu-dock@ubuntu.com']"; fi
+    gset org.gnome.shell disabled-extensions "$dis"
+  fi
 fi
 [[ -d "$EXTDIR/compiz-alike-magic-lamp-effect@hermes83.github.com" ]] &&
   enable_extension "compiz-alike-magic-lamp-effect@hermes83.github.com"

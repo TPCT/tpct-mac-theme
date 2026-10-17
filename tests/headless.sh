@@ -43,7 +43,7 @@ start)
   setsid dbus-run-session -- bash -c '
     echo "$DBUS_SESSION_BUS_ADDRESS" > "'"$ADDR_FILE"'"
     gsettings set org.gnome.shell disable-user-extensions false
-    gsettings set org.gnome.shell enabled-extensions "[\"tpct-debug@tpct\",\"user-theme@gnome-shell-extensions.gcampax.github.com\",\"ubuntu-dock@ubuntu.com\",\"blur-my-shell@aunetx\",\"tpct-mac-shell@tpct\",\"dash2dock-lite@icedman.github.com\",\"compiz-alike-magic-lamp-effect@hermes83.github.com\"]"
+    gsettings set org.gnome.shell enabled-extensions "[\"tpct-debug@tpct\",\"user-theme@gnome-shell-extensions.gcampax.github.com\",\"ubuntu-dock@ubuntu.com\",\"blur-my-shell@aunetx\",\"tpct-mac-shell@tpct\",\"dash2dock-lite@icedman.github.com\",\"compiz-alike-magic-lamp-effect@hermes83.github.com\",\"ding@rastersoft.com\"]"
     gsettings set org.gnome.shell.extensions.user-theme name "TPCT-Mac-'"$Variant"'"
     gsettings set org.gnome.desktop.interface color-scheme "prefer-'"$scheme"'"
     gsettings set org.gnome.desktop.interface icon-theme "WhiteSur-'"$scheme"'"

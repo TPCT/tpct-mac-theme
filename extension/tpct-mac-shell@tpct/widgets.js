@@ -4,6 +4,7 @@
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
+import GdkPixbuf from 'gi://GdkPixbuf';
 import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
@@ -405,6 +406,16 @@ class MusicWidget extends Card {
 
 // ───────────────────────── Photos ─────────────────────────
 
+// Skip icons and tiny images: only pictures at least 600px on the short side.
+function isPhotoSized(path) {
+    try {
+        const [, w, h] = GdkPixbuf.Pixbuf.get_file_info(path);
+        return Math.min(w, h) >= 600;
+    } catch (e) {
+        return false;
+    }
+}
+
 const PhotoWidget = GObject.registerClass(
 class PhotoWidget extends Card {
     _init() {
@@ -432,10 +443,15 @@ class PhotoWidget extends Card {
             let info;
             while ((info = en.next_file(null)) && files.length < 400) {
                 const child = GLib.build_filenamev([path, info.get_name()]);
-                if (info.get_file_type() === Gio.FileType.DIRECTORY && depth < 2 && !info.get_name().startsWith('.'))
-                    walk(child, depth + 1);
-                else if (/^image\/(jpeg|png|webp)$/.test(info.get_content_type() ?? ''))
+                const name = info.get_name();
+                if (info.get_file_type() === Gio.FileType.DIRECTORY) {
+                    // Screenshots are not photos.
+                    if (depth < 2 && !name.startsWith('.') && !/screenshot/i.test(name))
+                        walk(child, depth + 1);
+                } else if (/^image\/(jpeg|png|webp)$/.test(info.get_content_type() ?? '') &&
+                           !/screenshot/i.test(name) && isPhotoSized(child)) {
                     files.push(child);
+                }
             }
             en.close(null);
         };
@@ -657,7 +673,16 @@ export class DesktopWidgets {
             layout_manager: new Clutter.FixedLayout(),
             reactive: false,
         });
-        Main.layoutManager._backgroundGroup.add_child(this._layer);
+        // Desktop Icons (DING) covers the desktop with a transparent window that
+        // would swallow clicks, so the widgets sit in the window stack right
+        // above it (and above the wallpaper), but below normal app windows.
+        global.window_group.add_child(this._layer);
+        this._restackId = global.display.connect('restacked', () => this._restack());
+        this._windowAddedId = global.window_group.connect('child-added', (g, actor) => {
+            if (actor !== this._layer)
+                this._restack();
+        });
+        this._restack();
 
         this._menuManager = new PopupMenu.PopupMenuManager(this._layer);
         this._entries = []; // {id, col, row, widget}
@@ -671,6 +696,24 @@ export class DesktopWidgets {
         this._focusId = global.display.connect('notify::focus-window', () => this._syncFocus());
         this._position();
         this._syncFocus();
+    }
+
+    _restack() {
+        const group = global.window_group;
+        let anchor = Main.layoutManager._backgroundGroup;
+        for (const actor of group.get_children()) {
+            const win = actor.meta_window;
+            const title = win?.get_title?.() ?? '';
+            // DING names its windows "Desktop Icons N" (older versions "@!…").
+            const isDesktopIcons = title.startsWith('@!') || title.startsWith('Desktop Icons') ||
+                (win?.skip_taskbar && win?.get_wm_class?.() === 'gjs');
+            if (isDesktopIcons)
+                anchor = actor; // topmost desktop-icons window wins
+        }
+        if (anchor?.get_parent() === group)
+            group.set_child_above_sibling(this._layer, anchor);
+        else
+            group.set_child_below_sibling(this._layer, null);
     }
 
     _addWidget(entry) {
@@ -880,6 +923,8 @@ export class DesktopWidgets {
         Main.layoutManager.disconnect(this._monitorsId);
         this._interface.disconnect(this._schemeId);
         global.display.disconnect(this._focusId);
+        global.display.disconnect(this._restackId);
+        global.window_group.disconnect(this._windowAddedId);
         this._layer.destroy();
     }
 }
