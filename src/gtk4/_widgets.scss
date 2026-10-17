@@ -624,3 +624,12 @@ headerbar .linked > button.image-button { background-color: transparent; }
 }
 .nautilus-pathbar .nautilus-path-button.current-dir,
 .nautilus-pathbar .nautilus-path-button.current-dir:hover { background: none; box-shadow: none; }
+
+// Title-only bars (X11 app frames drawn by Mutter, plain GTK windows) are
+// slim on macOS: 28px with the traffic lights and a centered title.
+headerbar.default-decoration,
+window.ssd headerbar, .titlebar.default-decoration {
+  min-height: 28px;
+  padding: 0 8px;
+}
+headerbar.default-decoration .title { font-size: 13px; font-weight: 700; }

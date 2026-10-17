@@ -449,6 +449,25 @@ export default class TpctMacShell extends Extension {
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
 
+        // Volume/brightness pop-ups at the top right, below the menu bar (macOS Tahoe).
+        const osd = Main.osdWindowManager;
+        this._osdShow = osd._showOsdWindow;
+        const origShow = this._osdShow;
+        osd._showOsdWindow = function (monitorIndex, ...args) {
+            const w = this._osdWindows[monitorIndex];
+            if (w) {
+                w.x_align = Clutter.ActorAlign.END;
+                w.y_align = Clutter.ActorAlign.START;
+            }
+            return origShow.call(this, monitorIndex, ...args);
+        };
+
+        // Notification banners slide in at the top right, like macOS.
+        this._bannerBin = Main.messageTray._bannerBin;
+        this._bannerAlign = this._bannerBin?.x_align;
+        if (this._bannerBin)
+            this._bannerBin.x_align = Clutter.ActorAlign.END;
+
         // Follow the system Light/Dark switch, like macOS Appearance.
         this._interface = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
         this._schemeId = this._interface.connect('changed::color-scheme', () => this._syncVariant());
@@ -470,6 +489,21 @@ export default class TpctMacShell extends Extension {
     }
 
     disable() {
+        if (this._osdShow) {
+            Main.osdWindowManager._showOsdWindow = this._osdShow;
+            for (const w of Main.osdWindowManager._osdWindows) {
+                if (w) {
+                    w.x_align = Clutter.ActorAlign.CENTER;
+                    w.y_align = Clutter.ActorAlign.END;
+                }
+            }
+        }
+        this._osdShow = null;
+
+        if (this._bannerBin)
+            this._bannerBin.x_align = this._bannerAlign;
+        this._bannerBin = null;
+
         if (this._schemeId)
             this._interface.disconnect(this._schemeId);
         this._schemeId = 0;

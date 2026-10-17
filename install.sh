@@ -92,6 +92,7 @@ gset org.gnome.desktop.wm.preferences action-double-click-titlebar 'toggle-maxim
 gset org.gnome.mutter center-new-windows true
 gset org.gnome.desktop.interface enable-hot-corners false
 gset org.gnome.desktop.interface clock-show-weekday true
+gset org.gnome.desktop.interface clock-format '12h'
 gset org.gnome.desktop.peripherals.touchpad natural-scroll true
 gset org.gnome.desktop.peripherals.touchpad tap-to-click true
 
@@ -237,6 +238,20 @@ if have firefox; then
       echo 'user_pref("browser.tabs.inTitlebar", 1);' >> "$prof/user.js"
     echo "  Firefox profile themed: $(basename "$prof")"
   done < <(find "${roots[@]}" -maxdepth 2 -name prefs.js 2>/dev/null)
+fi
+
+# Terminal (Ptyxis): macOS Terminal colors and font.
+if gsettings list-schemas | grep -qx org.gnome.Ptyxis; then
+  PAL="${XDG_DATA_HOME:-$HOME/.local/share}/org.gnome.Ptyxis/palettes"
+  mkdir -p "$PAL"
+  cp ptyxis/macOS.palette "$PAL/"
+  uuid=$(gsettings get org.gnome.Ptyxis default-profile-uuid | tr -d "'")
+  if [[ -n "$uuid" ]]; then
+    gset "org.gnome.Ptyxis.Profile:/org/gnome/Ptyxis/Profiles/$uuid/" palette 'macOS'
+  fi
+  gset org.gnome.Ptyxis interface-style 'system'
+  gset org.gnome.Ptyxis use-system-font false
+  gset org.gnome.Ptyxis font-name 'DejaVu Sans Mono 11'
 fi
 
 # Flatpak apps can only see the theme if allowed to read it.

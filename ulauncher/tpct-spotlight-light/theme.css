@@ -13,14 +13,19 @@
     /* No drop shadow: Ulauncher's window is barely larger than the box, so a
        shadow gets clipped into a visible grey rectangle. */
     box-shadow: none;
-    padding: 4px 6px;
+    padding: 0 4px;
 }
 
 .input {
     color: rgba(0, 0, 0, 0.85);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 400;
-    padding: 10px 12px;
+    padding: 0 10px;
+    min-height: 0;
+    /* Ulauncher's layout adds 15px above and below the field; trim to ~7px. */
+    margin-top: -8px;
+    margin-bottom: -8px;
+    margin-left: -8px;
 }
 
 .input *:selected, .input *:focus, *:selected:focus {
@@ -28,7 +33,7 @@
     color: rgba(0, 0, 0, 0.85);
 }
 
-.result-box { padding: 4px 6px 8px 6px; }
+.result-box { padding: 0 6px 6px 6px; }
 
 .item-box {
     border-radius: 10px;

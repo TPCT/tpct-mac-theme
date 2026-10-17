@@ -322,6 +322,10 @@ stage {
 // ───────────────────────── OSD, dialogs, switcher ─────────────────────────
 
 .osd-window {
+  // Sits at the top right (see the extension); compact like macOS.
+  margin: 40px 12px 0 0;
+  padding: 10px 14px;
+  min-width: 220px;
   border-radius: 18px;
   background-color: $glass;
   border: 1px solid $glass-border;
