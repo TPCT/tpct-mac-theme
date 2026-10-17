@@ -246,14 +246,20 @@ spinbutton > button:hover { color: $mac_fg; background-color: $mac_fill; }
 dropdown > button, combobox > box > button, menubutton:not(.flat) > button.text-button {
   padding: 2px 8px 2px 10px;
 }
+// Pop-up buttons in forms get the macOS blue chevron box; menu buttons in
+// toolbars and inside other controls just show the chevron.
 dropdown > button > box > arrow, menubutton > button > box > arrow {
   -gtk-icon-source: -gtk-icontheme("pan-down-symbolic");
   min-width: 16px;
   min-height: 16px;
+  -gtk-icon-size: 10px;
+  margin-left: 4px;
+}
+dropdown:not(.flat) > button > box > arrow,
+row dropdown > button > box > arrow {
   border-radius: 5px;
   background-color: $mac_accent;
   color: #ffffff;
-  -gtk-icon-size: 10px;
   margin-left: 6px;
 }
 
@@ -672,3 +678,19 @@ headerbar.default-decoration .title { font-size: 13px; font-weight: 700; }
 .navigation-sidebar > row:nth-child(19) > :not(revealer) image { background-color: #0a84ff; }
 .navigation-sidebar > row:nth-child(20) > :not(revealer) image { background-color: #0a84ff; }
 .navigation-sidebar > row:nth-child(21) > :not(revealer) image { background-color: #8e8e93; }
+
+
+// ───────────────────────── Calculator: macOS keypad colors ─────────────────────────
+.math-buttons button { border-radius: 999px; min-height: 36px; font-size: 15px; box-shadow: none; }
+.math-buttons button.number-button, .math-buttons button.numeric-point-button {
+  background-color: #505050; color: #ffffff;
+}
+.math-buttons button.number-button:hover, .math-buttons button.numeric-point-button:hover { background-color: #6a6a6a; }
+.math-buttons button.function-button, .math-buttons button.clear-button,
+.math-buttons button.percent-button, .math-buttons button.parenthesis-button {
+  background-color: #a5a5a5; color: #000000;
+}
+.math-buttons button.operator-button, .math-buttons button.suggested-action {
+  background-color: #ff9f0a; color: #ffffff; font-size: 18px;
+}
+.math-buttons button.operator-button:hover, .math-buttons button.suggested-action:hover { background-color: #ffb340; }
