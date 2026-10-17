@@ -124,3 +124,6 @@
 .tpct-force-quit-row-box { spacing: 8px; }
 .tpct-force-quit-row:hover { background-color: rgba(128, 128, 128, 0.18); }
 .tpct-force-quit-row:checked { background-color: #0a84ff; color: #ffffff; }
+
+/* Widget being dragged */
+.tpct-widget:dragging { box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45); }

@@ -8,7 +8,10 @@ import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 import St from 'gi://St';
 
+import Meta from 'gi://Meta';
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 const SMALL = 158;
 const GAP = 18;
@@ -45,16 +48,11 @@ class Card extends St.BoxLayout {
             orientation: vertical ? Clutter.Orientation.VERTICAL : Clutter.Orientation.HORIZONTAL,
             width,
             height,
-            reactive: !!onClick,
-            track_hover: !!onClick,
+            reactive: true,
+            track_hover: true,
         });
-        if (onClick) {
-            this.connect('button-release-event', (a, event) => {
-                if (event.get_button() === Clutter.BUTTON_PRIMARY)
-                    onClick();
-                return Clutter.EVENT_STOP;
-            });
-        }
+        // The desktop layer handles press/drag/release and calls this on a click.
+        this.onClick = onClick;
         this._timers = [];
         this.connect('destroy', () => {
             this._timers.forEach(t => GLib.source_remove(t));
@@ -607,6 +605,47 @@ class WeatherWidget extends Card {
 
 // ───────────────────────── Layer ─────────────────────────
 
+const KINDS = {
+    clock:    {name: 'Clock',       make: dark => new ClockWidget(dark),      cols: 1},
+    weather:  {name: 'Weather',     make: () => new WeatherWidget(),          cols: 1},
+    calendar: {name: 'Calendar',    make: () => new CalendarWidget(),         cols: 2},
+    world:    {name: 'World Clock', make: dark => new WorldClockWidget(dark), cols: 2},
+    music:    {name: 'Music',       make: () => new MusicWidget(),            cols: 2},
+    photos:   {name: 'Photos',      make: () => new PhotoWidget(),            cols: 1},
+    battery:  {name: 'Batteries',   make: dark => new BatteryWidget(dark),    cols: 1},
+};
+
+// macOS Sonoma-like default: a column of widgets on the left.
+const DEFAULT_LAYOUT = [
+    {id: 'clock', col: 0, row: 0}, {id: 'weather', col: 1, row: 0},
+    {id: 'calendar', col: 0, row: 1},
+    {id: 'world', col: 0, row: 2},
+    {id: 'music', col: 0, row: 3},
+    {id: 'photos', col: 0, row: 4}, {id: 'battery', col: 1, row: 4},
+];
+
+const STATE_FILE = GLib.build_filenamev([GLib.get_user_config_dir(), 'tpct-mac', 'widgets.json']);
+const CELL = SMALL + GAP;
+
+function loadLayout() {
+    try {
+        const [, bytes] = GLib.file_get_contents(STATE_FILE);
+        const layout = JSON.parse(new TextDecoder().decode(bytes));
+        if (Array.isArray(layout))
+            return layout.filter(w => KINDS[w.id]);
+    } catch (e) {}
+    return DEFAULT_LAYOUT.map(w => ({...w}));
+}
+
+function saveLayout(layout) {
+    try {
+        GLib.mkdir_with_parents(GLib.path_get_dirname(STATE_FILE), 0o755);
+        GLib.file_set_contents(STATE_FILE, JSON.stringify(layout, null, 1));
+    } catch (e) {
+        logError(e, 'tpct-mac-shell: cannot save widget layout');
+    }
+}
+
 export class DesktopWidgets {
     constructor() {
         this._interface = new Gio.Settings({schema_id: 'org.gnome.desktop.interface'});
@@ -618,31 +657,178 @@ export class DesktopWidgets {
             layout_manager: new Clutter.FixedLayout(),
             reactive: false,
         });
-
-        // Left column, macOS Sonoma style:
-        //   [clock][weather]
-        //   [calendar.......]
-        //   [world clock....]
-        //   [music..........]
-        //   [photo][battery]
-        this._widgets = [];
-        const place = (widget, col, row) => {
-            widget.set_position(col * (SMALL + GAP), row * (SMALL + GAP));
-            this._layer.add_child(widget);
-            this._widgets.push(widget);
-        };
-        place(new ClockWidget(this._dark), 0, 0);
-        place(new WeatherWidget(), 1, 0);
-        place(new CalendarWidget(), 0, 1);
-        place(new WorldClockWidget(this._dark), 0, 2);
-        place(new MusicWidget(), 0, 3);
-        place(new PhotoWidget(), 0, 4);
-        place(new BatteryWidget(this._dark), 1, 4);
-
         Main.layoutManager._backgroundGroup.add_child(this._layer);
+
+        this._menuManager = new PopupMenu.PopupMenuManager(this._layer);
+        this._entries = []; // {id, col, row, widget}
+        this._layout = loadLayout();
+        this._layout.forEach(w => this._addWidget(w));
 
         this._monitorsId = Main.layoutManager.connect('monitors-changed', () => this._position());
         this._schemeId = this._interface.connect('changed::color-scheme', () => this._syncScheme());
+        // Like macOS, widgets fade to monochrome while an app window is active
+        // and come back in full color when the desktop is focused.
+        this._focusId = global.display.connect('notify::focus-window', () => this._syncFocus());
+        this._position();
+        this._syncFocus();
+    }
+
+    _addWidget(entry) {
+        const kind = KINDS[entry.id];
+        const widget = kind.make(this._dark);
+        widget.set_position(entry.col * CELL, entry.row * CELL);
+        this._layer.add_child(widget);
+        const e = {...entry, widget};
+        this._entries.push(e);
+        this._makeInteractive(e);
+        return e;
+    }
+
+    _makeInteractive(e) {
+        const w = e.widget;
+        w.connect('button-press-event', (actor, event) => {
+            const button = event.get_button();
+            if (button === Clutter.BUTTON_SECONDARY) {
+                this._openMenu(e);
+                return Clutter.EVENT_STOP;
+            }
+            if (button !== Clutter.BUTTON_PRIMARY)
+                return Clutter.EVENT_PROPAGATE;
+            const [px, py] = event.get_coords();
+            this._drag = {e, startX: px, startY: py, origX: w.x, origY: w.y, moved: false};
+            this._grab = global.stage.grab(w);
+            return Clutter.EVENT_PROPAGATE;
+        });
+        w.connect('motion-event', (actor, event) => {
+            const d = this._drag;
+            if (!d || d.e !== e)
+                return Clutter.EVENT_PROPAGATE;
+            const [px, py] = event.get_coords();
+            const dx = px - d.startX, dy = py - d.startY;
+            if (!d.moved && Math.hypot(dx, dy) < 6)
+                return Clutter.EVENT_PROPAGATE;
+            d.moved = true;
+            w.add_style_pseudo_class('dragging');
+            w.set_position(d.origX + dx, d.origY + dy);
+            return Clutter.EVENT_STOP;
+        });
+        w.connect('button-release-event', () => {
+            const d = this._drag;
+            if (!d || d.e !== e)
+                return Clutter.EVENT_PROPAGATE;
+            this._grab?.dismiss();
+            this._grab = null;
+            this._drag = null;
+            w.remove_style_pseudo_class('dragging');
+            if (d.moved)
+                this._drop(e, d);
+            else
+                w.onClick?.();
+            return Clutter.EVENT_STOP;
+        });
+    }
+
+    _cellsOf(entry, col = entry.col, row = entry.row) {
+        const cols = KINDS[entry.id].cols;
+        return Array.from({length: cols}, (_, i) => `${col + i},${row}`);
+    }
+
+    _drop(e, d) {
+        // Snap to the grid; go back if the spot is taken or off screen.
+        const col = Math.max(0, Math.round(e.widget.x / CELL));
+        const row = Math.max(0, Math.round(e.widget.y / CELL));
+        const taken = new Set(this._entries.filter(o => o !== e).flatMap(o => this._cellsOf(o)));
+        const fits = this._cellsOf(e, col, row).every(c => !taken.has(c)) &&
+            (col + KINDS[e.id].cols) * CELL <= this._maxWidth;
+        if (fits) {
+            e.col = col;
+            e.row = row;
+        }
+        e.widget.ease({
+            x: e.col * CELL, y: e.row * CELL, duration: 180,
+            mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+        });
+        this._save();
+    }
+
+    _save() {
+        saveLayout(this._entries.map(({id, col, row}) => ({id, col, row})));
+    }
+
+    _freeSpot(id) {
+        const taken = new Set(this._entries.flatMap(o => this._cellsOf(o)));
+        const cols = KINDS[id].cols;
+        for (let row = 0; row < 12; row++) {
+            for (let col = 0; col + cols <= 6; col++) {
+                const cells = Array.from({length: cols}, (_, i) => `${col + i},${row}`);
+                if (cells.every(c => !taken.has(c)))
+                    return {col, row};
+            }
+        }
+        return {col: 0, row: 0};
+    }
+
+    _openMenu(e) {
+        this._menu?.destroy();
+        const menu = new PopupMenu.PopupMenu(e.widget, 0.5, St.Side.TOP);
+        menu.actor.add_style_class_name('tpct-appmenu-menu');
+        Main.uiGroup.add_child(menu.actor);
+        this._menuManager.addMenu(menu);
+
+        menu.addAction('Remove Widget', () => this._remove(e));
+        menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        const edit = new PopupMenu.PopupSubMenuMenuItem('Edit Widgets');
+        for (const [id, kind] of Object.entries(KINDS)) {
+            const shown = this._entries.some(o => o.id === id);
+            const item = new PopupMenu.PopupMenuItem(kind.name);
+            item.setOrnament(shown ? PopupMenu.Ornament.CHECK : PopupMenu.Ornament.NONE);
+            item.connect('activate', () => {
+                const existing = this._entries.find(o => o.id === id);
+                if (existing)
+                    this._remove(existing);
+                else
+                    this._add(id);
+            });
+            edit.menu.addMenuItem(item);
+        }
+        menu.addMenuItem(edit);
+        menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        menu.addAction('Reset Layout', () => this._reset());
+
+        menu.connect('open-state-changed', (m, open) => {
+            if (!open) {
+                GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                    if (this._menu === menu) {
+                        menu.destroy();
+                        this._menu = null;
+                    }
+                    return GLib.SOURCE_REMOVE;
+                });
+            }
+        });
+        this._menu = menu;
+        menu.open();
+    }
+
+    _remove(e) {
+        this._entries = this._entries.filter(o => o !== e);
+        e.widget.destroy();
+        this._save();
+    }
+
+    _add(id) {
+        const spot = this._freeSpot(id);
+        const e = this._addWidget({id, ...spot});
+        e.widget.setDark(this._dark);
+        this._save();
+        this._position();
+    }
+
+    _reset() {
+        this._entries.forEach(o => o.widget.destroy());
+        this._entries = [];
+        DEFAULT_LAYOUT.forEach(w => this._addWidget({...w}));
+        this._save();
         this._position();
     }
 
@@ -652,21 +838,40 @@ export class DesktopWidgets {
             return;
         const top = Main.panel.height + 20;
         this._layer.set_position(m.x + 24, m.y + top);
-        // Hide rows that would not fit on short screens.
+        // Cover the whole desktop so the monochrome effect does not clip shadows.
+        this._layer.set_size(m.width - 48, m.height - top);
+        this._maxWidth = m.width - 48;
+        // Hide widgets that would not fit on short screens.
         const avail = m.height - top - 90;
-        for (const w of this._widgets)
-            w.visible = w.y + w.height <= avail;
+        for (const e of this._entries)
+            e.widget.visible = e.row * CELL + e.widget.height <= avail;
+    }
+
+    _syncFocus() {
+        const win = global.display.focus_window;
+        const desktopFocused = !win || win.skip_taskbar ||
+            win.get_window_type() === Meta.WindowType.DESKTOP;
+        if (desktopFocused) {
+            this._layer.remove_effect_by_name('tpct-mono');
+            this._layer.ease({opacity: 255, duration: 200});
+        } else if (!this._layer.get_effect('tpct-mono')) {
+            this._layer.add_effect_with_name('tpct-mono', new Clutter.DesaturateEffect({factor: 1.0}));
+            this._layer.ease({opacity: 205, duration: 200});
+        }
     }
 
     _syncScheme() {
         this._dark = this._interface.get_string('color-scheme') === 'prefer-dark';
         this._layer.style_class = this._dark ? 'tpct-widgets-dark' : 'tpct-widgets-light';
-        this._widgets.forEach(w => w.setDark(this._dark));
+        this._entries.forEach(e => e.widget.setDark(this._dark));
     }
 
     destroy() {
+        this._grab?.dismiss();
+        this._menu?.destroy();
         Main.layoutManager.disconnect(this._monitorsId);
         this._interface.disconnect(this._schemeId);
+        global.display.disconnect(this._focusId);
         this._layer.destroy();
     }
 }
