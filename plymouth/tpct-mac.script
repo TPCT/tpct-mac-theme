@@ -1,0 +1,55 @@
+# TPCT Mac boot splash: white Apple logo and a thin progress bar on black.
+
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+cx = Window.GetX() + Window.GetWidth() / 2;
+cy = Window.GetY() + Window.GetHeight() / 2;
+
+logo = Image("logo.png");
+logo_sprite = Sprite(logo);
+logo_sprite.SetX(cx - logo.GetWidth() / 2);
+logo_sprite.SetY(cy - logo.GetHeight() / 2 - 40);
+
+box = Image("progress_box.png");
+bar = Image("progress_bar.png");
+bar_y = cy + logo.GetHeight() / 2 + 40;
+box_sprite = Sprite(box);
+box_sprite.SetX(cx - box.GetWidth() / 2);
+box_sprite.SetY(bar_y);
+bar_sprite = Sprite();
+bar_sprite.SetX(cx - box.GetWidth() / 2);
+bar_sprite.SetY(bar_y);
+
+fun progress_callback(duration, progress) {
+  w = Math.Int(bar.GetWidth() * progress);
+  if (w < 1) w = 1;
+  bar_sprite.SetImage(bar.Scale(w, bar.GetHeight()));
+}
+Plymouth.SetBootProgressFunction(progress_callback);
+
+# Disk password prompt (only used if the disk is encrypted)
+prompt_sprite = Sprite();
+dots_sprite = Sprite();
+fun display_password_callback(prompt, bullets) {
+  box_sprite.SetOpacity(0);
+  bar_sprite.SetOpacity(0);
+  p = Image.Text(prompt, 1, 1, 1);
+  prompt_sprite.SetImage(p);
+  prompt_sprite.SetX(cx - p.GetWidth() / 2);
+  prompt_sprite.SetY(bar_y - 10);
+  s = "";
+  for (i = 0; i < bullets; i++) s += "●";
+  d = Image.Text(s, 1, 1, 1);
+  dots_sprite.SetImage(d);
+  dots_sprite.SetX(cx - d.GetWidth() / 2);
+  dots_sprite.SetY(bar_y + 20);
+}
+fun display_normal_callback() {
+  prompt_sprite.SetOpacity(0);
+  dots_sprite.SetOpacity(0);
+  box_sprite.SetOpacity(1);
+  bar_sprite.SetOpacity(1);
+}
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayNormalFunction(display_normal_callback);

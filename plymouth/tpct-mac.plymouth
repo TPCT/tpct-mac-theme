@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=TPCT Mac
+Description=macOS-style boot: Apple logo and a progress bar on black
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/tpct-mac
+ScriptFile=/usr/share/plymouth/themes/tpct-mac/tpct-mac.script

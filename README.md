@@ -44,7 +44,14 @@ Recommended companions (installed separately):
 
 Remove with `./install.sh --remove`.
 
-### Login screen (optional, needs sudo)
+### Boot splash and login screen (optional, needs sudo)
+
+```bash
+./install-system.sh            # Apple logo boot splash + macOS login screen
+./install-system.sh --remove   # back to stock
+```
+
+### Login screen only
 
 ```bash
 gdm/install-gdm.sh            # macOS-style login screen
