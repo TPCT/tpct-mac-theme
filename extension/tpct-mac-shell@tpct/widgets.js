@@ -851,6 +851,12 @@ export class DesktopWidgets {
         const win = global.display.focus_window;
         const desktopFocused = !win || win.skip_taskbar ||
             win.get_window_type() === Meta.WindowType.DESKTOP;
+        // The monochrome effect renders offscreen and clips soft shadows into
+        // boxes, so widgets drop their shadow while dimmed.
+        if (desktopFocused)
+            this._layer.remove_style_class_name('tpct-widgets-dimmed');
+        else
+            this._layer.add_style_class_name('tpct-widgets-dimmed');
         if (desktopFocused) {
             this._layer.remove_effect_by_name('tpct-mono');
             this._layer.ease({opacity: 255, duration: 200});
@@ -863,6 +869,8 @@ export class DesktopWidgets {
     _syncScheme() {
         this._dark = this._interface.get_string('color-scheme') === 'prefer-dark';
         this._layer.style_class = this._dark ? 'tpct-widgets-dark' : 'tpct-widgets-light';
+        this._layer.remove_effect_by_name('tpct-mono');
+        this._syncFocus();
         this._entries.forEach(e => e.widget.setDark(this._dark));
     }
 

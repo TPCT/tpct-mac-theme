@@ -142,3 +142,10 @@
 .tpct-window-button.maximize { background-color: #28c840; }
 .tpct-window-button-icon { icon-size: 8px; color: transparent; }
 .tpct-window-buttons:hover .tpct-window-button-icon { color: rgba(0, 0, 0, 0.6); }
+
+/* Cascading submenus */
+.tpct-cascade-item { spacing: 8px; }
+.tpct-cascade-arrow { icon-size: 12px; opacity: 0.6; }
+.popup-menu-item:hover .tpct-cascade-arrow, .popup-menu-item:active .tpct-cascade-arrow { opacity: 1; }
+.tpct-cascade-menu { -arrow-rise: 0; -boxpointer-gap: 2px; }
+.tpct-widgets-dimmed .tpct-widget { box-shadow: none; }

@@ -18,6 +18,7 @@ import {DesktopWidgets} from './widgets.js';
 import {AppleMenu} from './appleMenu.js';
 import {WindowButtons} from './windowButtons.js';
 import {SpotlightButton} from './spotlightButton.js';
+import {CascadeController, CascadeMenuItem} from './cascade.js';
 
 const FINDER_IDS = ['org.gnome.Nautilus.desktop', 'nautilus.desktop'];
 
@@ -74,7 +75,10 @@ class MenuBarButton extends PanelMenu.Button {
 });
 
 // Fill a PopupMenu from the plain item tree produced by menuSources.js.
-function fillMenu(menu, items) {
+// `cascade` = {controller, level}: submenus open to the side (macOS style);
+// without it they expand inline.
+function fillMenu(menu, items, cascade = null) {
+    cascade?.controller.closeFrom(cascade.level);
     menu.removeAll();
     let lastWasSeparator = true;
     for (const item of items) {
@@ -87,6 +91,15 @@ function fillMenu(menu, items) {
             continue;
         }
         lastWasSeparator = false;
+
+        if (item.children && cascade) {
+            const row = new CascadeMenuItem(item.label, cascade.controller, cascade.level);
+            row.setSensitive(item.enabled !== false);
+            fillMenu(row.submenu, item.children, {controller: cascade.controller, level: cascade.level + 1});
+            row.onAboutToShow = item.aboutToShow ?? null;
+            menu.addMenuItem(row);
+            continue;
+        }
 
         if (item.children) {
             const sub = new PopupMenu.PopupSubMenuMenuItem(item.label);
@@ -117,8 +130,19 @@ function fillMenu(menu, items) {
         else if (item.toggle === 'radio')
             mi.setOrnament(item.checked ? PopupMenu.Ornament.DOT : PopupMenu.Ornament.NO_DOT);
         mi.setSensitive(item.enabled !== false && !!item.activate);
-        if (item.activate)
-            mi.connect('activate', () => item.activate());
+        if (item.activate) {
+            mi.connect('activate', () => {
+                cascade?.controller.closeAll(true);
+                item.activate();
+            });
+        }
+        if (cascade) {
+            // Hovering a plain row closes any submenu opened from this menu.
+            mi.connect('notify::active', () => {
+                if (mi.active)
+                    cascade.controller.closeFrom(cascade.level);
+            });
+        }
         menu.addMenuItem(mi);
     }
     // Drop a trailing separator
@@ -209,7 +233,7 @@ class GlobalMenu {
         const top = this._appTopLevel();
         for (const b of this._buttons) {
             if (b.menu.isOpen && b._tpctIndex !== undefined && top[b._tpctIndex])
-                fillMenu(b.menu, top[b._tpctIndex].children ?? []);
+                fillMenu(b.menu, top[b._tpctIndex].children ?? [], b._cascade);
         }
         this._dirty = true;
     }
@@ -240,7 +264,9 @@ class GlobalMenu {
 
     _addButton(label, items, {bold = false, index} = {}) {
         const b = new MenuBarButton(label, bold);
-        fillMenu(b.menu, items);
+        b._cascade = {controller: new CascadeController(b.menu), level: 0};
+        b.connect('destroy', () => b._cascade.controller.destroy());
+        fillMenu(b.menu, items, b._cascade);
         b._tpctIndex = index;
         b.menu.connect('open-state-changed', (m, open) => {
             if (open) {
