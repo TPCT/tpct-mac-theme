@@ -56,6 +56,11 @@ class Card extends St.BoxLayout {
             });
         }
         this._timers = [];
+        this.connect('destroy', () => {
+            this._timers.forEach(t => GLib.source_remove(t));
+            this._timers = [];
+            this._onDestroy();
+        });
     }
 
     every(seconds, fn) {
@@ -67,11 +72,7 @@ class Card extends St.BoxLayout {
 
     setDark(_dark) {}
 
-    destroy() {
-        this._timers.forEach(t => GLib.source_remove(t));
-        this._timers = [];
-        super.destroy();
-    }
+    _onDestroy() {}
 });
 
 // Analog clock face drawn with cairo, shared by Clock and World Clock.
@@ -306,11 +307,10 @@ class CalendarWidget extends Card {
         }
     }
 
-    destroy() {
+    _onDestroy() {
         if (this._eventId)
             this._eventSource.disconnect(this._eventId);
         this._eventId = 0;
-        super.destroy();
     }
 });
 
@@ -397,12 +397,11 @@ class MusicWidget extends Card {
         }
     }
 
-    destroy() {
+    _onDestroy() {
         this._destroyed = true;
         if (this._playerId)
             this._player.disconnect(this._playerId);
         this._mprisIds?.forEach(id => this._mpris.disconnect(id));
-        super.destroy();
     }
 });
 
@@ -543,11 +542,10 @@ class BatteryWidget extends Card {
         cr.$dispose();
     }
 
-    destroy() {
+    _onDestroy() {
         this._destroyed = true;
         if (this._proxyId)
             this._proxy.disconnect(this._proxyId);
-        super.destroy();
     }
 });
 
@@ -600,11 +598,10 @@ class WeatherWidget extends Card {
         this._summary.text = info.get_sky() || info.get_conditions() || '';
     }
 
-    destroy() {
+    _onDestroy() {
         this._destroyed = true;
         if (this._clientId)
             this._client.disconnect(this._clientId);
-        super.destroy();
     }
 });
 
