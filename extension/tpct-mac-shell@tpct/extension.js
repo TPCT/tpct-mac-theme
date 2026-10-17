@@ -269,7 +269,19 @@ class GlobalMenu {
         const top = this._appTopLevel();
         const titles = new Set(top.map(t => t.label.toLowerCase()));
 
-        this._addButton(name, this._applicationMenu(name), {bold: true});
+        // Apps often export their own "<App name>" menu (Electron does). macOS has a
+        // single application menu, so fold it into ours instead of showing it twice.
+        let appItems = this._applicationMenu(name);
+        let appMenuIndex = -1;
+        const norm = t => (t ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (top.length && this._app) {
+            const a = norm(name), b = norm(top[0].label);
+            if (b.length > 2 && (a === b || a.includes(b) || b.includes(a))) {
+                appItems = [...top[0].children, {separator: true}, ...appItems];
+                appMenuIndex = 0;
+            }
+        }
+        this._addButton(name, appItems, {bold: true, index: appMenuIndex >= 0 ? appMenuIndex : undefined});
 
         if (this._isFinder() && !top.length) {
             this._addButton('File', this._finderFileMenu());
@@ -289,7 +301,10 @@ class GlobalMenu {
             return;
         }
 
-        top.forEach((item, i) => this._addButton(item.label, item.children, {index: i}));
+        top.forEach((item, i) => {
+            if (i !== appMenuIndex)
+                this._addButton(item.label, item.children, {index: i});
+        });
         if (!titles.has('window'))
             this._addButton('Window', this._windowMenu());
     }

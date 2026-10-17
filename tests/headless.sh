@@ -22,6 +22,10 @@ start)
   scheme="${2:-dark}"
   mkdir -p "$HL"/{config,data/gnome-shell/extensions,data/themes,cache}
   ext="$HL/data/gnome-shell/extensions"
+  # Tiny helper extension: unsafe mode lets tests use Eval and Screenshot.
+  mkdir -p "$ext/tpct-debug@tpct"
+  echo '{"uuid":"tpct-debug@tpct","name":"tpct debug","description":"test helper","shell-version":["48","49","50"]}' > "$ext/tpct-debug@tpct/metadata.json"
+  printf 'export default class TpctDebug {\n    enable() { global.context.unsafe_mode = true; }\n    disable() {}\n}\n' > "$ext/tpct-debug@tpct/extension.js"
   for e in blur-my-shell@aunetx logomenu@aryan_k; do
     [ -e "$HOME/.local/share/gnome-shell/extensions/$e" ] && ln -sfn "$HOME/.local/share/gnome-shell/extensions/$e" "$ext/$e"
   done
@@ -48,7 +52,10 @@ start)
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
     gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-    gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 48
+    gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 36
+    gsettings set org.gnome.shell.extensions.dash-to-dock show-show-apps-button false
+    gsettings set org.gnome.desktop.interface clock-format 12h
+    gsettings set org.gnome.desktop.interface clock-show-weekday true
     gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode DEFAULT
     exec gnome-shell --headless --virtual-monitor 1920x1080 --wayland-display wayland-tpct-test --no-x11
   ' > "$HL/shell.log" 2>&1 &
