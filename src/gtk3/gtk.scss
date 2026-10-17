@@ -479,3 +479,19 @@ headerbar .linked:not(.vertical) > button:not(.titlebutton):hover {
   min-height: 20px;
   padding: 1px 6px;
 }
+
+// GTK3 menus are separate popup windows: round the window frame too, or the
+// rounded menu sits on a square background.
+.csd.popup decoration, .popup decoration {
+  border-radius: $radius-menu;
+  box-shadow: 0 0 0 1px $border-strong, 0 8px 24px c(shadow-strong);
+}
+menu, .menu, .context-menu,
+.csd menu, .csd .menu, .csd .context-menu {
+  border-radius: $radius-menu;
+  background-color: c(popover);
+  padding: 5px;
+}
+menu menuitem, .menu menuitem, .context-menu menuitem { min-height: 22px; padding: 3px 10px; }
+menu arrow { min-width: 12px; min-height: 12px; color: $fg-dim; }
+menu menuitem:hover arrow { color: #ffffff; }

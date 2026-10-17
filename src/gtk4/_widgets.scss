@@ -68,9 +68,9 @@ windowcontrols { border-spacing: 8px; margin: 0 4px; }
 windowcontrols > button,
 windowcontrols > button:hover,
 windowcontrols > button:active,
-headerbar windowcontrols > button.image-button,
-headerbar windowcontrols > button.image-button:hover,
-headerbar windowcontrols > button.image-button:active,
+headerbar windowcontrols > button.image-button:not(.titlebutton):not(.suggested-action),
+headerbar windowcontrols > button.image-button:not(.titlebutton):not(.suggested-action):hover,
+headerbar windowcontrols > button.image-button:not(.titlebutton):not(.suggested-action):active,
 headerbar.default-decoration windowcontrols > button {
   min-width: 14px;
   min-height: 14px;
@@ -566,3 +566,65 @@ banner > revealer > widget { background-color: a($mac_accent, 0.15); }
 }
 .navigation-sidebar button:hover { color: $mac_fg; background-color: $mac_fill_hover; border-radius: 999px; }
 .navigation-sidebar > separator { margin: 6px 8px; }
+
+// ───────────────────────── macOS Tahoe window layout ─────────────────────────
+
+// Floating sidebar: an inset, rounded glass panel instead of a full-height column.
+overlay-split-view > .sidebar-pane,
+navigation-split-view > .sidebar-pane,
+.sidebar-pane {
+  margin: 8px 0 8px 8px;
+  border-radius: 14px;
+  background-color: $mac_sidebar;
+  box-shadow: 0 0 0 0.5px $mac_border_strong, 0 2px 10px a(black, 0.12);
+}
+overlay-split-view > .sidebar-pane:dir(rtl),
+navigation-split-view > .sidebar-pane:dir(rtl) { margin: 8px 8px 8px 0; }
+// The window behind the floating sidebar matches the content area.
+overlay-split-view, navigation-split-view { background-color: $mac_view; }
+.sidebar-pane headerbar { padding-left: 4px; }
+// Collapsed (narrow) sidebars slide over the content: keep them flat.
+overlay-split-view.collapsed > .sidebar-pane { margin: 0; border-radius: 0; }
+
+// Toolbar buttons: round glass buttons like Tahoe's toolbar items.
+headerbar button.image-button:not(.titlebutton),
+headerbar menubutton.image-button > button,
+headerbar splitbutton > button,
+headerbar splitbutton > menubutton > button {
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background-color: $mac_fill;
+}
+headerbar button.image-button:not(.titlebutton):hover,
+headerbar menubutton.image-button > button:hover,
+headerbar splitbutton > button:hover,
+headerbar splitbutton > menubutton > button:hover { background-color: $mac_fill_hover; }
+headerbar button.image-button:not(.titlebutton):disabled { background-color: transparent; opacity: 0.5; }
+headerbar splitbutton > button { border-radius: 999px 0 0 999px; }
+headerbar splitbutton > menubutton > button { border-radius: 0 999px 999px 0; min-width: 20px; padding: 0 4px; }
+headerbar splitbutton > separator { background: none; }
+// Inside sidebars and segmented groups keep buttons bare.
+.sidebar-pane headerbar button.image-button:not(.titlebutton),
+headerbar .linked > button.image-button { background-color: transparent; }
+
+// Finder path bar: just the folder name in bold, like the macOS title.
+.nautilus-pathbar { background: none; box-shadow: none; }
+.nautilus-path-button.current-dir label { font-weight: 700; font-size: 15px; }
+.nautilus-path-button.current-dir image { -gtk-icon-size: 0; min-width: 0; margin: 0; padding: 0; }
+.nautilus-path-button:not(.current-dir) {
+  min-width: 0; padding: 0; margin: 0;
+  font-size: 0; opacity: 0;
+}
+.nautilus-path-button:not(.current-dir) image { -gtk-icon-size: 0; }
+.nautilus-pathbar > menubutton > button { background: none; }
+// The path bar is a .linked box; keep the segmented-control capsule off it.
+.nautilus-pathbar.linked, .nautilus-pathbar .linked,
+.nautilus-pathbar > scrolledwindow, .nautilus-pathbar viewport {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+}
+.nautilus-pathbar .nautilus-path-button.current-dir,
+.nautilus-pathbar .nautilus-path-button.current-dir:hover { background: none; box-shadow: none; }
