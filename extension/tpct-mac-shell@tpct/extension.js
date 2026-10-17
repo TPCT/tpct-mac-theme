@@ -494,6 +494,29 @@ export default class TpctMacShell extends Extension {
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
 
+        // Mission Control has no search field (Spotlight does search); the
+        // app grid (Launchpad) keeps it.
+        const controls = Main.overview._overview?.controls;
+        this._overviewAdj = controls?._stateAdjustment ?? null;
+        const searchBin = controls?._searchEntryBin ?? Main.overview.searchEntry?.get_parent();
+        if (this._overviewAdj && searchBin) {
+            this._searchBin = searchBin;
+            const syncSearch = () => {
+                const inAppGrid = this._overviewAdj.value > 1.5;
+                const searching = Main.overview.searchEntry?.get_text() !== '';
+                searchBin.opacity = inAppGrid || searching ? 255 : 0;
+                // Launchpad shows only apps: fade the shrunken workspaces out
+                // as the app grid comes in (state 1 = Mission Control, 2 = apps).
+                const fade = Math.round(255 * (1 - Math.min(Math.max(this._overviewAdj.value - 1, 0), 1)));
+                for (const a of [controls._workspacesDisplay, controls._thumbnailsBox])
+                    if (a)
+                        a.opacity = fade;
+            };
+            this._overviewAdjId = this._overviewAdj.connect('notify::value', syncSearch);
+            this._searchTextId = Main.overview.searchEntry.clutter_text.connect('text-changed', syncSearch);
+            syncSearch();
+        }
+
         // Volume/brightness pop-ups at the top right, below the menu bar (macOS Tahoe).
         const osd = Main.osdWindowManager;
         this._osdShow = osd._showOsdWindow;
@@ -584,6 +607,19 @@ export default class TpctMacShell extends Extension {
     }
 
     disable() {
+        if (this._overviewAdjId)
+            this._overviewAdj.disconnect(this._overviewAdjId);
+        if (this._searchTextId)
+            Main.overview.searchEntry.clutter_text.disconnect(this._searchTextId);
+        if (this._searchBin)
+            this._searchBin.opacity = 255;
+        const ctl = Main.overview._overview?.controls;
+        for (const a of [ctl?._workspacesDisplay, ctl?._thumbnailsBox])
+            if (a)
+                a.opacity = 255;
+        this._overviewAdjId = this._searchTextId = 0;
+        this._searchBin = null;
+
         if (this._osdShow) {
             Main.osdWindowManager._showOsdWindow = this._osdShow;
             for (const w of Main.osdWindowManager._osdWindows) {
