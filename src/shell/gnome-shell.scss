@@ -12,8 +12,8 @@ $accent:      map-get($p, accent);
 $red:         map-get($p, red);
 
 // Translucent "glass" surfaces (Blur my Shell supplies the blur behind them).
-$glass:        if($is-dark, rgba(36, 36, 40, 0.80), rgba(246, 246, 248, 0.82));
-$glass-strong: if($is-dark, rgba(36, 36, 40, 0.92), rgba(250, 250, 252, 0.94));
+$glass:        if($is-dark, rgba(36, 36, 40, 0.94), rgba(246, 246, 248, 0.95));
+$glass-strong: if($is-dark, rgba(40, 40, 44, 0.97), rgba(250, 250, 252, 0.98));
 $glass-border: if($is-dark, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.12));
 $glass-hi:     if($is-dark, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.55));
 $tile:         if($is-dark, rgba(255, 255, 255, 0.09), rgba(0, 0, 0, 0.05));
@@ -366,4 +366,28 @@ stage {
   background-color: rgba(255, 255, 255, 0.18);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+// Control Center top row: round buttons and a capsule battery chip, like macOS.
+.quick-settings-system-item {
+  .icon-button, .button {
+    min-width: 36px;
+    min-height: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 999px;
+    background-color: $tile;
+    StIcon { icon-size: 16px; }
+    &:hover { background-color: $tile-hover; }
+  }
+  .power-item {
+    min-height: 36px;
+    height: 36px;
+    padding: 0 14px 0 6px;
+    border-radius: 999px;
+    background-color: $tile;
+    &:hover { background-color: $tile-hover; }
+    StIcon { icon-size: 16px; padding: 6px; border-radius: 999px; background-color: $tile-active; }
+  }
 }

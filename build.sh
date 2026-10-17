@@ -15,6 +15,12 @@ for v in Dark Light; do
   d="dist/TPCT-Mac-$v"
   mkdir -p "$d/gnome-shell"
   sassc -t expanded "src/shell/gnome-shell-$lv.scss" "$d/gnome-shell/gnome-shell.css"
+  mkdir -p "$d/gtk-3.0" "$d/gtk-4.0"
+  sassc -t expanded "src/gtk3/gtk-$lv.scss" "$d/gtk-3.0/gtk.css"
+  cp "$d/gtk-3.0/gtk.css" "$d/gtk-3.0/gtk-dark.css"
+  # GTK4 apps that do not use libadwaita read the theme directory directly.
+  cp dist/gtk-4.0/gtk.css "$d/gtk-4.0/gtk.css"
+  cp dist/gtk-4.0/gtk.css "$d/gtk-4.0/gtk-dark.css"
   cat > "$d/index.theme" <<THEME
 [Desktop Entry]
 Type=X-GNOME-Metatheme

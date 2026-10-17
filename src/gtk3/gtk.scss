@@ -1,0 +1,481 @@
+// TPCT Mac — GTK3 theme. Built per variant ($variant set by the wrapper files).
+// Adwaita is imported as the base so every widget is covered, then restyled.
+
+@import "../palette";
+
+$p: if($variant == dark, $dark, $light);
+$is-dark: $variant == dark;
+@function c($k) { @return map-get($p, $k); }
+
+$accent: c(accent);
+$fg: c(fg);
+$fg-dim: c(fg-dim);
+$fg-disabled: c(fg-disabled);
+$view: c(view);
+$window: c(window);
+$sidebar: c(sidebar);
+$control: c(control);
+$border: c(border);
+$border-strong: c(border-strong);
+$separator: c(separator);
+$shadow: c(shadow);
+$focus-ring: 0 0 0 3px transparentize($accent, 0.55);
+
+@import url("resource:///org/gtk/libgtk/theme/Adwaita/gtk-contained#{if($is-dark, '-dark', '')}.css");
+
+// Named colors used by applications and by Adwaita's own rules
+@define-color theme_bg_color #{$window};
+@define-color theme_fg_color #{c(fg-solid)};
+@define-color theme_base_color #{$view};
+@define-color theme_text_color #{c(fg-solid)};
+@define-color theme_selected_bg_color #{$accent};
+@define-color theme_selected_fg_color #ffffff;
+@define-color insensitive_bg_color #{$window};
+@define-color insensitive_fg_color #{$fg-disabled};
+@define-color insensitive_base_color #{$view};
+@define-color theme_unfocused_bg_color #{$window};
+@define-color theme_unfocused_fg_color #{c(fg-solid)};
+@define-color theme_unfocused_base_color #{$view};
+@define-color theme_unfocused_text_color #{c(fg-solid)};
+@define-color theme_unfocused_selected_bg_color #{$accent};
+@define-color theme_unfocused_selected_fg_color #ffffff;
+@define-color borders #{$border-strong};
+@define-color unfocused_borders #{$border};
+@define-color warning_color #{c(orange)};
+@define-color error_color #{c(red)};
+@define-color success_color #{c(green)};
+@define-color accent_color #{$accent};
+@define-color accent_bg_color #{$accent};
+@define-color accent_fg_color #ffffff;
+@define-color window_bg_color #{$window};
+@define-color window_fg_color #{c(fg-solid)};
+@define-color view_bg_color #{$view};
+@define-color view_fg_color #{c(fg-solid)};
+@define-color headerbar_bg_color #{c(headerbar)};
+@define-color headerbar_fg_color #{c(fg-solid)};
+@define-color popover_bg_color #{c(popover)};
+@define-color popover_fg_color #{c(fg-solid)};
+@define-color card_bg_color #{c(card)};
+@define-color wm_title #{c(fg-solid)};
+@define-color wm_unfocused_title #{$fg-dim};
+@define-color content_view_bg #{$view};
+
+* { outline-color: transparentize($accent, 0.5); }
+
+window, .background, popover, tooltip, menu, .menu, .context-menu, label {
+  font-family: $font-family;
+}
+
+.background { background-color: $window; color: c(fg-solid); }
+.view, iconview, treeview.view, textview text { background-color: $view; color: c(fg-solid); }
+
+// ───────────────────────── Windows & header bars ─────────────────────────
+
+decoration {
+  border-radius: $radius-window $radius-window $radius-window $radius-window;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, if($is-dark, 0.55, 0.22)),
+              0 10px 30px 4px rgba(0, 0, 0, 0.28),
+              0 2px 6px rgba(0, 0, 0, 0.18);
+}
+decoration:backdrop {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, if($is-dark, 0.45, 0.16)),
+              0 6px 18px 2px rgba(0, 0, 0, 0.18);
+}
+.maximized decoration, .fullscreen decoration, .tiled decoration { border-radius: 0; }
+.solid-csd decoration { border-radius: 0; box-shadow: none; }
+
+headerbar, .titlebar:not(headerbar) {
+  min-height: 46px;
+  padding: 0 8px;
+  border: none;
+  border-radius: $radius-window $radius-window 0 0;
+  background: c(headerbar);
+  color: c(fg-solid);
+  box-shadow: inset 0 -1px $separator;
+}
+headerbar:backdrop, .titlebar:backdrop { background: c(headerbar); color: $fg-dim; }
+.maximized headerbar, .tiled headerbar, .fullscreen headerbar { border-radius: 0; }
+headerbar .title { font-weight: 700; font-size: 13px; }
+headerbar .subtitle { font-size: 11px; color: $fg-dim; }
+headerbar separator { background: none; }
+
+// Traffic lights. GTK3 sizes the button from its 16px icon, so the button
+// stays 16px and a transparent 2px border shrinks the painted circle to 12px.
+// :not(.appmenu) matches the specificity of Adwaita's own titlebutton rule.
+headerbar button.titlebutton:not(.appmenu), .titlebar button.titlebutton:not(.appmenu),
+headerbar.default-decoration button.titlebutton:not(.appmenu),
+headerbar button.titlebutton:not(.appmenu):hover, headerbar button.titlebutton:not(.appmenu):backdrop {
+  min-width: 16px;
+  min-height: 16px;
+  padding: 0;
+  margin: 0 2px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background-clip: padding-box;
+  box-shadow: none;
+  color: transparent;
+  -gtk-icon-shadow: none;
+  -gtk-icon-transform: scale(0.6);
+}
+headerbar button.titlebutton image { color: transparent; }
+headerbar button.titlebutton.close    { background-color: $tl-close; }
+headerbar button.titlebutton.minimize { background-color: $tl-minimize; }
+headerbar button.titlebutton.maximize { background-color: $tl-maximize; }
+headerbar:hover button.titlebutton image { color: rgba(0, 0, 0, 0.55); }
+headerbar button.titlebutton.close:active    { background-color: darken($tl-close, 8%); }
+headerbar button.titlebutton.minimize:active { background-color: darken($tl-minimize, 8%); }
+headerbar button.titlebutton.maximize:active { background-color: darken($tl-maximize, 8%); }
+headerbar:backdrop:not(:hover) button.titlebutton { background-color: c(inactive-dot); }
+
+// ───────────────────────── Buttons ─────────────────────────
+
+button {
+  min-height: 22px;
+  min-width: 16px;
+  padding: 2px 12px;
+  border: none;
+  border-radius: $radius-control;
+  background: $control;
+  color: $fg;
+  box-shadow: 0 0 0 1px $border, 0 1px 1.5px $shadow;
+  text-shadow: none;
+  -gtk-icon-shadow: none;
+  font-weight: 500;
+  outline: none;
+}
+button:hover { background: c(control-hover); }
+button:active, button:checked { background: c(control-active); }
+button:disabled { background: $control; color: $fg-disabled; box-shadow: 0 0 0 1px $border; }
+button:backdrop { box-shadow: 0 0 0 1px $border; }
+button:focus { box-shadow: 0 0 0 1px $border, $focus-ring; }
+button.image-button { padding: 2px 6px; }
+
+button.suggested-action, button.default {
+  background: $accent; color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 1px 1.5px $shadow;
+}
+button.suggested-action:hover { background: c(accent-hover); }
+button.suggested-action:active { background: c(accent-active); }
+button.suggested-action:disabled { background: transparentize($accent, 0.6); color: rgba(255, 255, 255, 0.7); }
+button.destructive-action {
+  background: c(red); color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 1px 1.5px $shadow;
+}
+button.destructive-action:hover { background: lighten(c(red), 4%); }
+button.destructive-action:active { background: darken(c(red), 6%); }
+
+button.flat, headerbar button:not(.titlebutton):not(.suggested-action):not(.destructive-action),
+.toolbar button, toolbar button, actionbar button:not(.suggested-action):not(.destructive-action),
+.sidebar button.flat, popover button.flat {
+  background: transparent;
+  box-shadow: none;
+}
+button.flat:hover, headerbar button:not(.titlebutton):not(.suggested-action):not(.destructive-action):hover,
+toolbar button:hover, actionbar button:not(.suggested-action):not(.destructive-action):hover {
+  background: c(fill-hover);
+}
+button.flat:active, button.flat:checked,
+headerbar button:not(.titlebutton):not(.suggested-action):not(.destructive-action):active,
+headerbar button:not(.titlebutton):not(.suggested-action):not(.destructive-action):checked,
+toolbar button:active, toolbar button:checked {
+  background: c(fill-active);
+}
+headerbar button:not(.titlebutton) { min-height: 26px; border-radius: 999px; }
+headerbar button.image-button:not(.titlebutton) { min-width: 26px; padding: 2px 6px; }
+
+// Segmented (linked) controls
+.linked:not(.vertical) {
+  background: c(fill);
+  border-radius: 999px;
+  padding: 2px;
+}
+.linked:not(.vertical) > button,
+.linked:not(.vertical) > button:hover,
+.linked:not(.vertical) > button:backdrop,
+headerbar .linked:not(.vertical) > button:not(.titlebutton) {
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  min-height: 22px;
+}
+.linked:not(.vertical) > button:hover { background: c(fill-hover); }
+.linked:not(.vertical) > button:checked,
+headerbar .linked:not(.vertical) > button:checked:not(.titlebutton) {
+  background: c(segment);
+  color: c(segment-fg);
+  box-shadow: 0 0 0 1px $border, 0 1px 2px $shadow;
+}
+.linked.vertical > button { border-radius: 0; }
+.linked.vertical > button:first-child { border-radius: $radius-control $radius-control 0 0; }
+.linked.vertical > button:last-child { border-radius: 0 0 $radius-control $radius-control; }
+
+// Combo boxes
+combobox button.combo { padding: 2px 6px 2px 10px; }
+combobox arrow, button.combo arrow, menubutton arrow {
+  min-width: 16px; min-height: 16px;
+  border-radius: 5px;
+  background: $accent;
+  color: #ffffff;
+  -gtk-icon-source: -gtk-icontheme("pan-down-symbolic");
+}
+
+// ───────────────────────── Entries ─────────────────────────
+
+entry, spinbutton:not(.vertical) {
+  min-height: 24px;
+  padding: 0 8px;
+  border: none;
+  border-radius: $radius-control;
+  background: $view;
+  color: c(fg-solid);
+  box-shadow: 0 0 0 1px $border-strong, inset 0 1px 1px $shadow;
+}
+entry:focus, spinbutton:not(.vertical):focus-within, spinbutton:focus {
+  box-shadow: 0 0 0 1px $accent, $focus-ring;
+}
+entry:disabled { background: c(fill); color: $fg-disabled; }
+entry.search { border-radius: 999px; background: c(fill); box-shadow: none; }
+entry.search:focus { box-shadow: 0 0 0 1px $accent, $focus-ring; }
+entry image { color: $fg-dim; }
+entry selection, selection, *:selected, text selection { background-color: transparentize($accent, 0.65); color: c(fg-solid); }
+spinbutton:not(.vertical) { padding: 0; }
+spinbutton:not(.vertical) entry { box-shadow: none; background: transparent; }
+spinbutton:not(.vertical) button,
+spinbutton:not(.vertical) button:hover,
+spinbutton:not(.vertical) button:active {
+  border: none;
+  border-left: 1px solid $separator;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: $fg-dim;
+}
+spinbutton:not(.vertical) button:hover { color: c(fg-solid); background: c(fill); }
+
+// ───────────────────────── Switch / check / radio ─────────────────────────
+
+switch {
+  min-width: 38px;
+  min-height: 22px;
+  border: none;
+  border-radius: 999px;
+  background: c(track);
+  box-shadow: inset 0 0 0 1px $border;
+  color: transparent;
+  font-size: 0;
+}
+switch:checked { background: $accent; box-shadow: none; }
+switch:disabled { opacity: 0.5; }
+switch slider {
+  min-width: 20px;
+  min-height: 20px;
+  margin: 1px;
+  border: none;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.22);
+}
+
+check, radio {
+  min-width: 14px;
+  min-height: 14px;
+  margin: 0 6px 0 0;
+  padding: 0;
+  border: none;
+  background: $control;
+  background-image: none;
+  box-shadow: 0 0 0 1px $border-strong, inset 0 1px 1px $shadow;
+  color: transparent;
+  -gtk-icon-source: none;
+}
+check { border-radius: 4px; }
+radio { border-radius: 999px; }
+check:checked, check:indeterminate, radio:checked, radio:indeterminate {
+  background: $accent;
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+check:checked { -gtk-icon-source: -gtk-icontheme("object-select-symbolic"); }
+check:indeterminate, radio:indeterminate { -gtk-icon-source: -gtk-icontheme("list-remove-symbolic"); }
+radio:checked { background-image: radial-gradient(circle, #ffffff 0px, #ffffff 2.6px, transparent 3.2px); }
+check:disabled, radio:disabled { opacity: 0.5; }
+menuitem check, menuitem radio, modelbutton check, modelbutton radio {
+  background: none; box-shadow: none; color: inherit;
+}
+menuitem check:checked, modelbutton check:checked { -gtk-icon-source: -gtk-icontheme("object-select-symbolic"); }
+
+// ───────────────────────── Scale / progress ─────────────────────────
+
+scale trough, scale fill {
+  min-height: 4px;
+  border: none;
+  border-radius: 999px;
+  background: c(track);
+}
+scale.vertical trough { min-width: 4px; }
+scale highlight { border: none; border-radius: 999px; background: $accent; }
+scale slider {
+  min-width: 22px;
+  min-height: 16px;
+  margin: -7px -2px;
+  border: none;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.28);
+}
+scale.vertical slider { min-width: 16px; min-height: 22px; margin: -2px -7px; }
+
+progressbar.horizontal > trough, progressbar.horizontal > trough > progress { min-height: 6px; min-width: 0; }
+progressbar.vertical > trough, progressbar.vertical > trough > progress { min-width: 6px; min-height: 0; }
+progressbar > trough { border: none; border-radius: 999px; background: c(track); }
+progressbar > trough > progress { border: none; border-radius: 999px; background: $accent; }
+
+// ───────────────────────── Lists, trees, sidebars ─────────────────────────
+
+.sidebar, placessidebar, stacksidebar, .navigation-sidebar {
+  background-color: $sidebar;
+  border: none;
+}
+.sidebar list, placessidebar list, stacksidebar list { background: transparent; }
+.navigation-sidebar, placessidebar list { padding: 6px 8px; }
+.navigation-sidebar > row, placessidebar row, stacksidebar row {
+  min-height: 26px;
+  margin: 1px 0;
+  border-radius: $radius-item;
+  color: c(fg-solid);
+}
+.navigation-sidebar > row:selected, placessidebar row:selected, stacksidebar row:selected,
+.navigation-sidebar > row:selected:hover, placessidebar row:selected:hover {
+  background: c(selection);
+  color: c(fg-solid);
+}
+.navigation-sidebar image, placessidebar image.sidebar-icon { color: $accent; }
+
+treeview.view { border-color: $separator; }
+treeview.view:selected, treeview.view:selected:focus, list row:selected, iconview:selected,
+flowbox flowboxchild:selected {
+  background-color: $accent;
+  color: #ffffff;
+}
+treeview.view header button {
+  background: $view;
+  border: none;
+  border-right: 1px solid $separator;
+  border-bottom: 1px solid $separator;
+  border-radius: 0;
+  box-shadow: none;
+  color: $fg-dim;
+  font-weight: 500;
+  padding: 2px 8px;
+}
+treeview.view header button:hover { background: c(fill); }
+scrolledwindow > frame, frame > border, scrolledwindow.frame { border-color: $border-strong; border-radius: $radius-control; }
+list { background-color: $view; }
+row.activatable:hover { background-color: c(fill); }
+
+// ───────────────────────── Menus & popovers ─────────────────────────
+
+menu, .menu, .context-menu {
+  padding: 5px;
+  border: none;
+  border-radius: $radius-menu;
+  background: c(popover);
+  box-shadow: 0 0 0 1px $border-strong;
+}
+.csd menu, .csd .menu, .csd .context-menu { border: none; }
+menu menuitem, .menu menuitem, .context-menu menuitem {
+  min-height: 20px;
+  padding: 2px 10px;
+  border-radius: $radius-item;
+  color: c(fg-solid);
+  text-shadow: none;
+}
+menu menuitem:hover, .menu menuitem:hover, .context-menu menuitem:hover {
+  background: $accent;
+  color: #ffffff;
+}
+menu menuitem:disabled { color: $fg-disabled; }
+menu menuitem accelerator { color: $fg-dim; }
+menu menuitem:hover accelerator { color: rgba(255, 255, 255, 0.75); }
+menu separator, .menu separator { margin: 4px 8px; background: $separator; min-height: 1px; }
+menubar { padding: 0; box-shadow: inset 0 -1px $separator; }
+menubar > menuitem { padding: 4px 8px; border-radius: $radius-item; }
+menubar > menuitem:hover { background: $accent; color: #ffffff; box-shadow: none; }
+
+popover, popover.background {
+  padding: 5px;
+  border: 1px solid $border-strong;
+  border-radius: $radius-menu;
+  background: c(popover);
+  box-shadow: 0 8px 24px c(shadow-strong);
+}
+popover modelbutton {
+  min-height: 22px;
+  padding: 1px 10px;
+  border-radius: $radius-item;
+}
+popover modelbutton:hover { background: $accent; color: #ffffff; }
+popover separator { margin: 4px 8px; background: $separator; }
+
+tooltip, tooltip.background {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: c(tooltip);
+  color: c(fg-solid);
+  border: 1px solid $border-strong;
+  box-shadow: none;
+}
+tooltip * { color: c(fg-solid); text-shadow: none; }
+
+// ───────────────────────── Notebook / tabs ─────────────────────────
+
+notebook > header { background: $window; border: none; box-shadow: inset 0 -1px $separator; padding: 4px; }
+notebook > header tab {
+  min-height: 22px;
+  padding: 2px 12px;
+  border: none;
+  border-radius: $radius-item;
+  box-shadow: none;
+  color: $fg-dim;
+}
+notebook > header.top > tabs > tab:hover, notebook > header tab:hover { background: c(fill); color: c(fg-solid); box-shadow: none; }
+notebook > header.top > tabs > tab:checked, notebook > header.bottom > tabs > tab:checked,
+notebook > header.left > tabs > tab:checked, notebook > header.right > tabs > tab:checked,
+notebook > header tab:checked {
+  background: c(segment);
+  color: c(segment-fg);
+  box-shadow: 0 0 0 1px $border, 0 1px 2px $shadow;
+}
+notebook > stack:not(:only-child) { background: $view; }
+
+// ───────────────────────── Scrollbars ─────────────────────────
+
+scrollbar { background: transparent; border: none; }
+scrollbar slider {
+  min-width: 7px;
+  min-height: 7px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  background-color: transparentize(c(fg-solid), 0.58);
+}
+scrollbar slider:hover { background-color: transparentize(c(fg-solid), 0.45); }
+scrollbar.overlay-indicator:not(.dragging):not(.hovering) slider { min-width: 5px; min-height: 5px; margin: 2px; border: none; }
+
+// ───────────────────────── Dialogs & misc ─────────────────────────
+
+messagedialog .dialog-action-area button { border-radius: 999px; min-height: 26px; }
+dialog .dialog-action-box { padding: 12px; }
+.dim-label { color: $fg-dim; opacity: 1; }
+separator { background: $separator; min-width: 1px; min-height: 1px; }
+infobar { border: none; }
+infobar.info > revealer > box { background: transparentize($accent, 0.85); }
+levelbar block.filled { background: $accent; border: none; }
+levelbar block.empty { background: c(track); border: none; }
+toolbar, .inline-toolbar, actionbar > revealer > box { background: $window; border-color: $separator; }
+
+headerbar .linked:not(.vertical) > button:not(.titlebutton),
+headerbar .linked:not(.vertical) > button:not(.titlebutton):hover {
+  min-height: 20px;
+  padding: 1px 6px;
+}

@@ -74,8 +74,9 @@ gset org.gnome.desktop.interface clock-show-weekday true
 gset org.gnome.desktop.peripherals.touchpad natural-scroll true
 gset org.gnome.desktop.peripherals.touchpad tap-to-click true
 
-if fc-list | grep -qiE 'SF Pro|Inter'; then
-  font=$(fc-list : family | grep -qi 'SF Pro Text' && echo 'SF Pro Text' || echo 'Inter Variable')
+families=$(fc-list : family)
+if grep -qiE 'SF Pro|Inter' <<<"$families"; then
+  font=$(grep -qi 'SF Pro Text' <<<"$families" && echo 'SF Pro Text' || echo 'Inter Variable')
   gset org.gnome.desktop.interface font-name "$font 10.5"
   gset org.gnome.desktop.interface document-font-name "$font 11"
   gset org.gnome.desktop.wm.preferences titlebar-font "$font Bold 10.5"
@@ -102,7 +103,8 @@ fi
 BMS="$EXTDIR/blur-my-shell@aunetx/schemas"
 if [[ -d "$BMS" ]]; then
   P=org.gnome.shell.extensions.blur-my-shell.popup
-  for kv in "menu-corner-radius 12" "quick-settings-corner-radius 24" "notification-corner-radius 16" \
+  # Its popup blur is a square that shows dark corners behind rounded menus.
+  for kv in "blur false" "menu-corner-radius 12" "quick-settings-corner-radius 24" "notification-corner-radius 16" \
             "osd-corner-radius 18" "dialog-corner-radius 22" "corner-radius 16" \
             "preserve-shell-theme true" "override-background false"; do
     # shellcheck disable=SC2086
