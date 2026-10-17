@@ -500,8 +500,6 @@ export default class TpctMacShell extends Extension {
         this._appleMenu = new AppleMenu();
         Main.panel.addToStatusArea('tpctAppleMenu', this._appleMenu, 0, 'left');
         // Logo Menu draws a second  button; hide it whenever it shows up.
-        // (The Ubuntu dock is switched off by install.sh through
-        // disabled-extensions; disabling it at runtime leaves it half-torn-down.)
         const syncExtensions = () => Main.panel.statusArea.LogoMenu?.container.hide();
         syncExtensions();
         this._extStateId = Main.extensionManager.connect('extension-state-changed', syncExtensions);
