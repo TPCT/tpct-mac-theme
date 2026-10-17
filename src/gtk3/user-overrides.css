@@ -1,0 +1,28 @@
+/* tpct-mac-theme: begin */
+/* Loaded at user priority from ~/.config/gtk-3.0/gtk.css so it can override
+ * styles that apps install at application priority (e.g. Desktop Icons). */
+
+/* Desktop icons: macOS selection = grey box around the icon + blue label. */
+.file-item, .file-item:hover, .file-item-hover,
+.file-item.desktop-icons-selected, .file-item.desktop-icons-keyboard-selected {
+  background-color: transparent;
+  box-shadow: none;
+  border-color: transparent;
+}
+.file-item.desktop-icons-selected > eventbox:first-child,
+.file-item.desktop-icons-keyboard-selected > eventbox:first-child {
+  background-color: rgba(128, 128, 128, 0.35);
+  border-radius: 6px;
+}
+.file-item.desktop-icons-selected label.file-label,
+.file-item.desktop-icons-selected label.file-label-dark,
+.file-item.desktop-icons-keyboard-selected label.file-label,
+.file-item.desktop-icons-keyboard-selected label.file-label-dark {
+  background-color: #0a84ff;
+  color: #ffffff;
+  text-shadow: none;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+label.file-label { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); font-weight: 500; }
+/* tpct-mac-theme: end */

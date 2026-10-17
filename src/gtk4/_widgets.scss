@@ -609,15 +609,11 @@ headerbar splitbutton > separator { background: none; }
 .sidebar-pane headerbar button.image-button:not(.titlebutton),
 headerbar .linked > button.image-button { background-color: transparent; }
 
-// Finder path bar: just the folder name in bold, like the macOS title.
-.nautilus-pathbar { background: none; box-shadow: none; }
-.nautilus-path-button.current-dir label { font-weight: 700; font-size: 15px; }
-.nautilus-path-button.current-dir image { -gtk-icon-size: 0; min-width: 0; margin: 0; padding: 0; }
-.nautilus-path-button:not(.current-dir) {
-  min-width: 0; padding: 0; margin: 0;
-  font-size: 0; opacity: 0;
-}
-.nautilus-path-button:not(.current-dir) image { -gtk-icon-size: 0; }
+// Finder path bar: full breadcrumb, parents dimmed and the current folder in bold.
+.nautilus-path-button { font-weight: 500; color: $mac_fg_dim; }
+.nautilus-path-button:hover { color: $mac_fg; }
+.nautilus-path-button.current-dir { color: $mac_fg; }
+.nautilus-path-button.current-dir label { font-weight: 700; }
 .nautilus-pathbar > menubutton > button { background: none; }
 // The path bar is a .linked box; keep the segmented-control capsule off it.
 .nautilus-pathbar.linked, .nautilus-pathbar .linked,

@@ -31,6 +31,11 @@ if [[ "${1:-}" == "--remove" ]]; then
   done
   gsettings reset org.gnome.shell.extensions.user-theme name 2>/dev/null || true
   gsettings reset org.gnome.desktop.interface gtk-theme
+  python3 - "$GTK3/gtk.css" <<'PY' 2>/dev/null || true
+import re, sys
+p = sys.argv[1]; t = open(p).read()
+open(p, "w").write(re.sub(r"/\* tpct-mac-theme: begin \*/.*?/\* tpct-mac-theme: end \*/\n?", "", t, flags=re.S))
+PY
   rm -rf "${XDG_CONFIG_HOME:-$HOME/.config}/Kvantum/TPCT-Mac-"* "$HOME/.config/environment.d/90-tpct-mac-qt.conf"
   grep -l '^X-TPCT-Mac=true' "$HOME/.local/share/applications"/*.desktop 2>/dev/null | xargs -r rm -f
   gsettings reset org.gnome.desktop.wm.keybindings switch-input-source
@@ -56,6 +61,18 @@ for f in gtk.css gtk-dark.css; do
 done
 # Leftovers from other themes' GTK4 installs would fight with ours.
 rm -rf "$GTK4/assets" "$GTK4/windows-assets"
+
+echo "==> Installing GTK3 user overrides"
+mkdir -p "$GTK3"
+touch "$GTK3/gtk.css"
+# Replace our marked block, keep anything else the user has in the file.
+python3 - "$GTK3/gtk.css" src/gtk3/user-overrides.css <<'PY'
+import re, sys
+path, block = sys.argv[1], open(sys.argv[2]).read().strip() + "\n"
+text = open(path).read()
+text = re.sub(r"/\* tpct-mac-theme: begin \*/.*?/\* tpct-mac-theme: end \*/\n?", "", text, flags=re.S)
+open(path, "w").write(text.rstrip() + ("\n\n" if text.strip() else "") + block)
+PY
 
 echo "==> Installing GNOME Shell extension"
 rm -rf "$EXTDIR/$EXT_UUID"
