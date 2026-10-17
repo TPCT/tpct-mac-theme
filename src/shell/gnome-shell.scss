@@ -396,3 +396,59 @@ stage {
     StLabel { font-weight: 600; font-size: 13px; }
   }
 }
+
+// ───────────────────────── Dock: macOS details ─────────────────────────
+// The dock's own stylesheet loads after the theme, hence !important.
+
+// No hover/focus squares behind icons; macOS only shows the dot.
+#dashtodockContainer .dash-item-container .overview-tile .overview-icon,
+#dashtodockContainer .dash-item-container .overview-tile:hover .overview-icon,
+#dashtodockContainer .dash-item-container .overview-tile.focused .overview-icon,
+#dashtodockContainer .dash-item-container .app-well-app .overview-icon,
+#dashtodockContainer .dash-item-container .app-well-app:hover .overview-icon,
+#dashtodockContainer .dash-item-container .app-well-app.focused .overview-icon,
+#dashtodockContainer .dash-item-container .show-apps .overview-icon,
+#dashtodockContainer .dash-item-container .show-apps:hover .overview-icon,
+#dashtodockContainer .dash-item-container .show-apps:checked .overview-icon {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+// Running indicator: small dot under the icon
+#dashtodockContainer .app-well-app-running-dot,
+#dashtodockContainer .app-grid-running-dot {
+  width: 4px !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background-color: if($is-dark, rgba(255, 255, 255, 0.85), rgba(0, 0, 0, 0.75)) !important;
+  margin-bottom: 1px !important;
+}
+
+// Separator between apps and Trash
+#dashtodockContainer .dash-separator {
+  width: 1px !important;
+  margin: 6px 4px !important;
+  background-color: if($is-dark, rgba(255, 255, 255, 0.22), rgba(0, 0, 0, 0.18)) !important;
+}
+
+// Red badge like macOS
+#dashtodockContainer .notification-badge {
+  color: #ffffff !important;
+  background-color: #ff3b30 !important;
+  border-radius: 999px !important;
+  padding: 1px 5px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+// App name tooltip above the icon
+.dash-label, .dash-label.bottom {
+  border-radius: 7px !important;
+  padding: 3px 10px !important;
+  font-size: 12px !important;
+  font-weight: normal !important;
+  background-color: $glass-strong !important;
+  color: $fg !important;
+  border: 1px solid $glass-border !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}

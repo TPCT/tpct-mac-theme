@@ -100,6 +100,7 @@ if gsettings list-schemas | grep -qx "$D"; then
   gset $D running-indicator-style 'DOTS'
   gset $D show-trash true
   gset $D show-mounts false
+  gset $D show-show-apps-button false
   gset $D click-action 'minimize-or-previews'
 fi
 
