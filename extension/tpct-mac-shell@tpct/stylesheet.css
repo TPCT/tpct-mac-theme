@@ -1,0 +1,31 @@
+.tpct-appmenu-box {
+  spacing: 0;
+}
+
+#panel .panel-button.tpct-appmenu-item {
+  -natural-hpadding: 9px;
+  -minimum-hpadding: 6px;
+}
+
+.tpct-appmenu-name {
+  font-weight: 700;
+}
+
+.tpct-appmenu-label {
+  font-weight: 500;
+}
+
+.tpct-accel {
+  padding-left: 28px;
+  font-feature-settings: "tnum";
+  opacity: 0.55;
+}
+
+.popup-menu-item:hover .tpct-accel,
+.popup-menu-item:focus .tpct-accel {
+  opacity: 0.85;
+}
+
+.tpct-appmenu-menu .popup-menu-content {
+  min-width: 220px;
+}

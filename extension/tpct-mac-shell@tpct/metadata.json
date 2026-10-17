@@ -1,0 +1,8 @@
+{
+  "uuid": "tpct-mac-shell@tpct",
+  "name": "TPCT Mac Shell",
+  "description": "macOS-style menu bar for GNOME: global application menu, Finder menus on the desktop, clock on the right.",
+  "shell-version": ["48", "49", "50"],
+  "url": "https://github.com/tpct/tpct-mac-theme",
+  "version": 1
+}

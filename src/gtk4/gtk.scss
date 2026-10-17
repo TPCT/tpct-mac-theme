@@ -1,0 +1,105 @@
+// TPCT Mac — GTK4 / libadwaita layer.
+// Loaded from ~/.config/gtk-4.0/gtk.css on top of libadwaita. Colors are
+// defined per color scheme; every rule below only references @mac_* names.
+
+@import "../palette";
+
+@mixin define-colors($p) {
+  // libadwaita named colors
+  @define-color accent_bg_color #{map-get($p, accent)};
+  @define-color accent_fg_color #ffffff;
+  @define-color accent_color #{map-get($p, accent)};
+  @define-color destructive_bg_color #{map-get($p, red)};
+  @define-color destructive_fg_color #ffffff;
+  @define-color destructive_color #{map-get($p, red)};
+  @define-color success_bg_color #{map-get($p, green)};
+  @define-color success_color #{map-get($p, green)};
+  @define-color warning_bg_color #{map-get($p, orange)};
+  @define-color warning_color #{map-get($p, orange)};
+  @define-color error_bg_color #{map-get($p, red)};
+  @define-color error_color #{map-get($p, red)};
+
+  @define-color window_bg_color #{map-get($p, window)};
+  @define-color window_fg_color #{map-get($p, fg)};
+  @define-color view_bg_color #{map-get($p, view)};
+  @define-color view_fg_color #{map-get($p, fg)};
+  @define-color headerbar_bg_color #{map-get($p, headerbar)};
+  @define-color headerbar_fg_color #{map-get($p, fg)};
+  @define-color headerbar_border_color #{map-get($p, border)};
+  @define-color headerbar_backdrop_color #{map-get($p, headerbar)};
+  @define-color headerbar_shade_color #{map-get($p, separator)};
+  @define-color headerbar_darker_shade_color #{map-get($p, separator)};
+  @define-color sidebar_bg_color #{map-get($p, sidebar)};
+  @define-color sidebar_fg_color #{map-get($p, fg)};
+  @define-color sidebar_backdrop_color #{map-get($p, sidebar)};
+  @define-color sidebar_shade_color transparent;
+  @define-color sidebar_border_color #{map-get($p, separator)};
+  @define-color secondary_sidebar_bg_color #{map-get($p, sidebar-2)};
+  @define-color secondary_sidebar_fg_color #{map-get($p, fg)};
+  @define-color secondary_sidebar_backdrop_color #{map-get($p, sidebar-2)};
+  @define-color secondary_sidebar_shade_color transparent;
+  @define-color secondary_sidebar_border_color #{map-get($p, separator)};
+  @define-color card_bg_color #{map-get($p, card)};
+  @define-color card_fg_color #{map-get($p, fg)};
+  @define-color card_shade_color #{map-get($p, separator)};
+  @define-color dialog_bg_color #{map-get($p, dialog)};
+  @define-color dialog_fg_color #{map-get($p, fg)};
+  @define-color popover_bg_color #{map-get($p, popover)};
+  @define-color popover_fg_color #{map-get($p, fg)};
+  @define-color popover_shade_color #{map-get($p, shadow)};
+  @define-color thumbnail_bg_color #{map-get($p, card)};
+  @define-color thumbnail_fg_color #{map-get($p, fg)};
+  @define-color shade_color #{map-get($p, shadow)};
+  @define-color scrollbar_outline_color transparent;
+
+  // Theme-private names
+  @define-color mac_accent #{map-get($p, accent)};
+  @define-color mac_accent_hover #{map-get($p, accent-hover)};
+  @define-color mac_accent_active #{map-get($p, accent-active)};
+  @define-color mac_red #{map-get($p, red)};
+  @define-color mac_green #{map-get($p, green)};
+  @define-color mac_fg #{map-get($p, fg)};
+  @define-color mac_fg_solid #{map-get($p, fg-solid)};
+  @define-color mac_fg_dim #{map-get($p, fg-dim)};
+  @define-color mac_fg_disabled #{map-get($p, fg-disabled)};
+  @define-color mac_view #{map-get($p, view)};
+  @define-color mac_window #{map-get($p, window)};
+  @define-color mac_sidebar #{map-get($p, sidebar)};
+  @define-color mac_popover #{map-get($p, popover)};
+  @define-color mac_tooltip #{map-get($p, tooltip)};
+  @define-color mac_card #{map-get($p, card)};
+  @define-color mac_control #{map-get($p, control)};
+  @define-color mac_control_hover #{map-get($p, control-hover)};
+  @define-color mac_control_active #{map-get($p, control-active)};
+  @define-color mac_fill #{map-get($p, fill)};
+  @define-color mac_fill_hover #{map-get($p, fill-hover)};
+  @define-color mac_fill_active #{map-get($p, fill-active)};
+  @define-color mac_track #{map-get($p, track)};
+  @define-color mac_border #{map-get($p, border)};
+  @define-color mac_border_strong #{map-get($p, border-strong)};
+  @define-color mac_separator #{map-get($p, separator)};
+  @define-color mac_shadow #{map-get($p, shadow)};
+  @define-color mac_shadow_strong #{map-get($p, shadow-strong)};
+  @define-color mac_selection #{map-get($p, selection)};
+  @define-color mac_knob #{map-get($p, knob)};
+  @define-color mac_segment #{map-get($p, segment)};
+  @define-color mac_segment_fg #{map-get($p, segment-fg)};
+  @define-color mac_inactive_dot #{map-get($p, inactive-dot)};
+}
+
+@include define-colors($light);
+@media (prefers-color-scheme: dark) {
+  @include define-colors($dark);
+}
+
+:root {
+  --window-radius: #{$radius-window};
+  --border-opacity: 10%;
+  --dim-opacity: 55%;
+  --accent-bg-color: #{"@mac_accent"};
+  --accent-color: #{"@mac_accent"};
+  --accent-fg-color: #ffffff;
+}
+
+@import "names";
+@import "widgets";

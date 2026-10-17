@@ -1,0 +1,107 @@
+// macOS (Tahoe-style) palette shared by GTK3, GTK4 and GNOME Shell.
+
+$light: (
+  accent:        #0088ff,
+  accent-hover:  #1a94ff,
+  accent-active: #0077e0,
+  red:           #ff383c,
+  orange:        #ff8d28,
+  yellow:        #ffcc00,
+  green:         #34c759,
+  purple:        #cb30e0,
+
+  fg:            rgba(0, 0, 0, 0.85),
+  fg-solid:      #1d1d1f,
+  fg-dim:        rgba(0, 0, 0, 0.50),
+  fg-disabled:   rgba(0, 0, 0, 0.25),
+
+  window:        #f5f5f7,
+  view:          #ffffff,
+  headerbar:     #ffffff,
+  sidebar:       #ebebef,
+  sidebar-2:     #f2f2f5,
+  card:          #ffffff,
+  popover:       #f6f6f8,
+  dialog:        #f6f6f8,
+  tooltip:       #fdfdfd,
+
+  control:       #ffffff,
+  control-hover: #fafafa,
+  control-active:#ececec,
+  fill:          rgba(0, 0, 0, 0.05),
+  fill-hover:    rgba(0, 0, 0, 0.08),
+  fill-active:   rgba(0, 0, 0, 0.13),
+  track:         rgba(0, 0, 0, 0.09),
+
+  border:        rgba(0, 0, 0, 0.10),
+  border-strong: rgba(0, 0, 0, 0.18),
+  separator:     rgba(0, 0, 0, 0.09),
+  shadow:        rgba(0, 0, 0, 0.12),
+  shadow-strong: rgba(0, 0, 0, 0.22),
+  selection:     rgba(0, 0, 0, 0.08),
+
+  knob:          #ffffff,
+  segment:       #ffffff,
+  segment-fg:    rgba(0, 0, 0, 0.85),
+  inactive-dot:  #d1d1d6,
+);
+
+$dark: (
+  accent:        #0091ff,
+  accent-hover:  #1f9fff,
+  accent-active: #0080e6,
+  red:           #ff4245,
+  orange:        #ff9230,
+  yellow:        #ffd600,
+  green:         #30d158,
+  purple:        #db34f2,
+
+  fg:            rgba(255, 255, 255, 0.86),
+  fg-solid:      #f5f5f7,
+  fg-dim:        rgba(255, 255, 255, 0.55),
+  fg-disabled:   rgba(255, 255, 255, 0.25),
+
+  window:        #1e1e20,
+  view:          #1c1c1e,
+  headerbar:     #1c1c1e,
+  sidebar:       #2a2a2d,
+  sidebar-2:     #242427,
+  card:          rgba(255, 255, 255, 0.05),
+  popover:       #2a2a2d,
+  dialog:        #2a2a2d,
+  tooltip:       #323235,
+
+  control:       rgba(255, 255, 255, 0.12),
+  control-hover: rgba(255, 255, 255, 0.16),
+  control-active:rgba(255, 255, 255, 0.22),
+  fill:          rgba(255, 255, 255, 0.08),
+  fill-hover:    rgba(255, 255, 255, 0.12),
+  fill-active:   rgba(255, 255, 255, 0.18),
+  track:         rgba(255, 255, 255, 0.14),
+
+  border:        rgba(255, 255, 255, 0.10),
+  border-strong: rgba(255, 255, 255, 0.16),
+  separator:     rgba(255, 255, 255, 0.09),
+  shadow:        rgba(0, 0, 0, 0.30),
+  shadow-strong: rgba(0, 0, 0, 0.50),
+  selection:     rgba(255, 255, 255, 0.10),
+
+  knob:          #f0f0f2,
+  segment:       rgba(255, 255, 255, 0.24),
+  segment-fg:    #ffffff,
+  inactive-dot:  #4a4a4e,
+);
+
+// Traffic lights are the same in both variants.
+$tl-close:    #ff5f57;
+$tl-minimize: #febc2e;
+$tl-maximize: #28c840;
+
+// Geometry
+$radius-window:  18px;
+$radius-control: 8px;
+$radius-menu:    12px;
+$radius-item:    6px;
+$radius-card:    12px;
+
+$font-family: "SF Pro Text", "SF Pro Display", "Inter Variable", "Inter", "Cantarell", sans-serif;

@@ -1,0 +1,542 @@
+// Widget rules. User-priority CSS overrides libadwaita regardless of selector
+// specificity, so every state of a widget we touch is restyled here.
+
+$ease: 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$focus-ring: 0 0 0 3px a($mac_accent, 0.45);
+
+window, .background, popover, tooltip, dialog, label {
+  font-family: $font-family;
+}
+
+// ───────────────────────── Windows ─────────────────────────
+
+window.csd, window.csd > .titlebar, window.csd > contents {
+  border-radius: $radius-window;
+}
+window.csd {
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.35),
+              0 10px 30px 4px rgba(0, 0, 0, 0.28),
+              0 2px 6px rgba(0, 0, 0, 0.18);
+}
+window.csd:backdrop {
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25),
+              0 6px 18px 2px rgba(0, 0, 0, 0.18);
+}
+window.maximized, window.fullscreen, window.tiled, window.tiled-top,
+window.tiled-left, window.tiled-right, window.tiled-bottom {
+  border-radius: 0;
+}
+
+// ───────────────────────── Header bars ─────────────────────────
+
+headerbar {
+  min-height: 52px;
+  padding: 0 8px;
+  background-color: $headerbar_bg_color;
+  color: $mac_fg;
+  box-shadow: inset 0 -1px $mac_separator;
+}
+headerbar:backdrop { color: $mac_fg_dim; }
+toolbarview > .top-bar headerbar, .flat headerbar, headerbar.flat,
+.sidebar-pane headerbar, .content-pane headerbar {
+  background: none;
+  box-shadow: none;
+}
+toolbarview > .top-bar.raised headerbar,
+toolbarview > .top-bar.raised { box-shadow: none; }
+toolbarview > .top-bar.raised {
+  box-shadow: inset 0 -1px $mac_separator;
+}
+headerbar .title, windowtitle .title {
+  font-weight: 700;
+  font-size: 13px;
+}
+windowtitle .subtitle { font-size: 11px; color: $mac_fg_dim; }
+
+// Sidebar panes look like the frosted macOS source list.
+.sidebar-pane, .navigation-sidebar, placessidebar, stacksidebar {
+  background-color: $mac_sidebar;
+}
+.sidebar-pane { box-shadow: inset -1px 0 $mac_separator; }
+.sidebar-pane:dir(rtl) { box-shadow: inset 1px 0 $mac_separator; }
+
+// ───────────────────────── Traffic lights ─────────────────────────
+
+windowcontrols { border-spacing: 8px; margin: 0 4px; }
+windowcontrols > button,
+windowcontrols > button:hover,
+windowcontrols > button:active,
+headerbar.default-decoration windowcontrols > button {
+  min-width: 14px;
+  min-height: 14px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+  border: none;
+}
+windowcontrols > button > image,
+headerbar.default-decoration windowcontrols > button > image {
+  min-width: 12px;
+  min-height: 12px;
+  padding: 1px;
+  -gtk-icon-size: 10px;
+  border-radius: 50%;
+  color: transparent;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  transition: none;
+}
+windowcontrols > button.close > image    { background-color: $tl-close; }
+windowcontrols > button.minimize > image { background-color: $tl-minimize; }
+windowcontrols > button.maximize > image { background-color: $tl-maximize; }
+
+windowcontrols:hover > button > image { color: rgba(0, 0, 0, 0.55); }
+windowcontrols > button.close:active > image    { background-color: sh($tl-close, 0.85); }
+windowcontrols > button.minimize:active > image { background-color: sh($tl-minimize, 0.85); }
+windowcontrols > button.maximize:active > image { background-color: sh($tl-maximize, 0.85); }
+
+window:backdrop windowcontrols:not(:hover) > button > image {
+  background-color: $mac_inactive_dot;
+  box-shadow: none;
+}
+
+// ───────────────────────── Buttons ─────────────────────────
+
+button {
+  min-height: 24px;
+  min-width: 16px;
+  padding: 2px 12px;
+  border-radius: $radius-control;
+  border: none;
+  background-color: $mac_control;
+  color: $mac_fg;
+  box-shadow: 0 0 0 0.5px $mac_border, 0 1px 1.5px $mac_shadow;
+  font-weight: 500;
+  transition: background-color $ease, box-shadow $ease;
+}
+button:hover { background-color: $mac_control_hover; }
+button:active, button:checked { background-color: $mac_control_active; }
+button:disabled { color: $mac_fg_disabled; box-shadow: 0 0 0 0.5px $mac_border; }
+button:focus:focus-visible { outline: none; box-shadow: $focus-ring; }
+button.image-button { min-width: 24px; padding: 2px 6px; }
+
+button.suggested-action, button.default {
+  background-color: $mac_accent;
+  color: #ffffff;
+  box-shadow: 0 0 0 0.5px a(black, 0.06), 0 1px 1.5px $mac_shadow;
+}
+button.suggested-action:hover  { background-color: $mac_accent_hover; }
+button.suggested-action:active { background-color: $mac_accent_active; }
+button.suggested-action:disabled { background-color: a($mac_accent, 0.4); color: a(white, 0.7); }
+
+button.destructive-action {
+  background-color: $mac_red;
+  color: #ffffff;
+  box-shadow: 0 0 0 0.5px a(black, 0.06), 0 1px 1.5px $mac_shadow;
+}
+button.destructive-action:hover  { background-color: sh($mac_red, 1.06); }
+button.destructive-action:active { background-color: sh($mac_red, 0.9); }
+
+button.pill { padding: 6px 24px; border-radius: 999px; }
+button.circular { border-radius: 999px; padding: 4px; min-width: 24px; }
+
+// Flat / toolbar buttons: borderless glyphs that get a soft fill on hover.
+button.flat, headerbar button:not(.suggested-action):not(.destructive-action),
+.toolbar button:not(.suggested-action):not(.destructive-action),
+actionbar button:not(.suggested-action):not(.destructive-action),
+menubutton.flat > button, splitbutton.flat > button,
+popover button.flat {
+  background: none;
+  box-shadow: none;
+  color: $mac_fg;
+}
+button.flat:hover, headerbar button:not(.suggested-action):not(.destructive-action):hover,
+.toolbar button:not(.suggested-action):not(.destructive-action):hover,
+actionbar button:not(.suggested-action):not(.destructive-action):hover,
+menubutton.flat > button:hover {
+  background-color: $mac_fill_hover;
+}
+button.flat:active, button.flat:checked,
+headerbar button:not(.suggested-action):not(.destructive-action):active,
+headerbar button:not(.suggested-action):not(.destructive-action):checked,
+.toolbar button:not(.suggested-action):not(.destructive-action):active,
+actionbar button:not(.suggested-action):not(.destructive-action):active,
+menubutton.flat > button:active, menubutton.flat > button:checked {
+  background-color: $mac_fill_active;
+}
+headerbar button { min-height: 28px; border-radius: 999px; }
+headerbar button.image-button { min-width: 28px; padding: 2px 8px; }
+headerbar button:backdrop { color: $mac_fg_dim; }
+
+// ───────────── Linked groups → Tahoe "glass capsule" segmented controls ─────────────
+
+.linked:not(.vertical) {
+  background-color: $mac_fill;
+  border-radius: 999px;
+  padding: 2px;
+  border-spacing: 0;
+}
+headerbar .linked:not(.vertical) { background-color: $mac_fill; }
+.linked:not(.vertical) > button,
+.linked:not(.vertical) > button:hover,
+.linked:not(.vertical) > menubutton > button,
+.linked:not(.vertical) > dropdown > button {
+  border-radius: 999px;
+  background: none;
+  box-shadow: none;
+  min-height: 22px;
+  padding: 1px 12px;
+}
+.linked:not(.vertical) > button.image-button { padding: 1px 8px; }
+.linked:not(.vertical) > button:hover { background-color: $mac_fill_hover; }
+.linked:not(.vertical) > button:checked,
+.linked:not(.vertical) > button:active {
+  background-color: $mac_segment;
+  color: $mac_segment_fg;
+  box-shadow: 0 0 0 0.5px $mac_border, 0 1px 2px $mac_shadow;
+}
+headerbar .linked:not(.vertical) > button { min-height: 26px; }
+
+// ───────────────────────── Entries ─────────────────────────
+
+entry, spinbutton, searchbar entry, text.entry {
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: $radius-control;
+  background-color: $mac_view;
+  color: $mac_fg;
+  border: none;
+  box-shadow: 0 0 0 0.5px $mac_border_strong, inset 0 0.5px 1px $mac_shadow;
+  outline: none;
+  transition: box-shadow $ease;
+}
+entry:focus-within, spinbutton:focus-within {
+  box-shadow: 0 0 0 0.5px $mac_accent, $focus-ring;
+  outline: none;
+}
+entry:disabled, spinbutton:disabled { color: $mac_fg_disabled; background-color: $mac_fill; }
+entry > text > placeholder, entry placeholder { color: $mac_fg_dim; }
+entry.search, searchentry {
+  border-radius: 999px;
+  background-color: $mac_fill;
+  box-shadow: none;
+}
+searchentry:focus-within { box-shadow: 0 0 0 0.5px $mac_accent, $focus-ring; }
+selection { background-color: a($mac_accent, 0.35); color: inherit; }
+
+spinbutton { padding: 0; }
+spinbutton > text { padding: 0 8px; }
+spinbutton > button, spinbutton > button:hover, spinbutton > button:active {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  min-width: 22px;
+  padding: 0 4px;
+  color: $mac_fg_dim;
+  border-left: 1px solid $mac_separator;
+}
+spinbutton > button:hover { color: $mac_fg; background-color: $mac_fill; }
+
+// Dropdowns / combo buttons
+dropdown > button, combobox > box > button, menubutton:not(.flat) > button.text-button {
+  padding: 2px 8px 2px 10px;
+}
+dropdown > button > box > arrow, menubutton > button > box > arrow {
+  -gtk-icon-source: -gtk-icontheme("pan-down-symbolic");
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 5px;
+  background-color: $mac_accent;
+  color: #ffffff;
+  -gtk-icon-size: 10px;
+  margin-left: 6px;
+}
+
+// ───────────────────────── Switch ─────────────────────────
+
+switch {
+  min-width: 38px;
+  min-height: 22px;
+  padding: 0;
+  border-radius: 999px;
+  border: none;
+  background-color: $mac_track;
+  box-shadow: inset 0 0 0 0.5px $mac_border;
+  color: transparent;
+  transition: background-color 200ms ease;
+}
+switch:checked { background-color: $mac_accent; box-shadow: none; }
+switch:disabled { opacity: 0.5; }
+switch:focus:focus-visible { outline: none; box-shadow: $focus-ring; }
+switch > image { color: transparent; -gtk-icon-size: 0; }
+switch > slider {
+  min-width: 20px;
+  min-height: 20px;
+  margin: 1px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: none;
+  outline: none;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.22);
+}
+switch:hover > slider { background-color: #ffffff; }
+
+// ───────────────────────── Check & radio ─────────────────────────
+
+checkbutton { border-spacing: 6px; padding: 2px; }
+checkbutton:focus:focus-visible { outline: none; }
+check, radio {
+  min-width: 14px;
+  min-height: 14px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: $mac_control;
+  box-shadow: 0 0 0 0.5px $mac_border_strong, inset 0 0.5px 1px $mac_shadow;
+  color: transparent;
+  -gtk-icon-size: 12px;
+  transition: background-color $ease;
+}
+check { border-radius: 4px; }
+radio { border-radius: 999px; }
+check:hover, radio:hover { background-color: $mac_control_hover; }
+check:checked, check:indeterminate, radio:checked, radio:indeterminate {
+  background-color: $mac_accent;
+  color: #ffffff;
+  box-shadow: 0 0 0 0.5px a(black, 0.08);
+}
+check:checked { -gtk-icon-source: -gtk-icontheme("object-select-symbolic"); }
+check:indeterminate, radio:indeterminate { -gtk-icon-source: -gtk-icontheme("list-remove-symbolic"); }
+radio:checked {
+  -gtk-icon-source: none;
+  background-image: radial-gradient(circle, white 0px, white 2.6px, transparent 3.2px);
+}
+checkbutton:focus:focus-visible > check, checkbutton:focus:focus-visible > radio {
+  box-shadow: $focus-ring;
+}
+check:disabled, radio:disabled { opacity: 0.5; }
+
+// ───────────────────────── Scale ─────────────────────────
+
+scale { padding: 10px 12px; }
+scale > trough {
+  min-height: 4px;
+  border-radius: 999px;
+  background-color: $mac_track;
+  outline: none;
+}
+scale.vertical > trough { min-width: 4px; min-height: 0; }
+scale > trough > highlight {
+  border-radius: 999px;
+  background-color: $mac_accent;
+}
+scale > trough > slider {
+  min-width: 22px;
+  min-height: 16px;
+  margin: -6px -11px;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.28);
+}
+scale.vertical > trough > slider { min-width: 16px; min-height: 22px; margin: -11px -6px; }
+scale > trough > slider:hover, scale > trough > slider:active { background-color: #ffffff; }
+scale:focus:focus-visible > trough > slider { box-shadow: $focus-ring, 0 1px 4px rgba(0, 0, 0, 0.28); }
+
+// ───────────────────────── Progress ─────────────────────────
+
+progressbar > trough {
+  min-height: 6px;
+  border-radius: 999px;
+  background-color: $mac_track;
+}
+progressbar > trough > progress {
+  min-height: 6px;
+  border-radius: 999px;
+  background-color: $mac_accent;
+}
+progressbar.osd > trough, progressbar.osd > trough > progress { min-height: 3px; }
+levelbar > trough > block.filled { background-color: $mac_accent; }
+levelbar > trough > block.empty { background-color: $mac_track; }
+
+// ───────────────────────── Lists ─────────────────────────
+
+.navigation-sidebar { padding: 6px 10px; }
+.navigation-sidebar > row {
+  min-height: 28px;
+  padding: 0 8px;
+  margin: 1px 0;
+  border-radius: $radius-item;
+  color: $mac_fg;
+}
+.navigation-sidebar > row:hover { background-color: a(currentColor, 0.04); }
+.navigation-sidebar > row:selected,
+.navigation-sidebar > row:selected:hover {
+  background-color: $mac_selection;
+  color: $mac_fg;
+}
+.navigation-sidebar > row image { color: $mac_accent; }
+.navigation-sidebar > row:selected image { color: $mac_accent; }
+
+// System-Settings style grouped lists
+list.boxed-list, .boxed-list, list.content {
+  border-radius: $radius-card;
+  background-color: $mac_card;
+  box-shadow: 0 0 0 0.5px $mac_border;
+}
+list.boxed-list > row, .boxed-list > row {
+  min-height: 40px;
+  border-bottom: 1px solid $mac_separator;
+}
+list.boxed-list > row:last-child, .boxed-list > row:last-child { border-bottom: none; }
+list.boxed-list > row:first-child { border-radius: $radius-card $radius-card 0 0; }
+list.boxed-list > row:last-child { border-radius: 0 0 $radius-card $radius-card; }
+list.boxed-list > row:only-child { border-radius: $radius-card; }
+row.activatable:hover { background-color: a(currentColor, 0.03); }
+row.activatable:active { background-color: a(currentColor, 0.07); }
+row .subtitle, row.property .subtitle { font-size: 11px; color: $mac_fg_dim; }
+row > box.header > box.title > .title { font-weight: 400; }
+
+// Selected rows in views use the accent like Finder's focused list
+listview > row:selected, columnview > listview > row:selected,
+list:not(.navigation-sidebar):not(.boxed-list) > row:selected {
+  background-color: $mac_accent;
+  color: #ffffff;
+  border-radius: $radius-item;
+}
+gridview > child:selected { background-color: a($mac_accent, 0.25); border-radius: 8px; }
+
+// ───────────────────────── Popovers & menus ─────────────────────────
+
+popover > contents, popover.background > contents {
+  border-radius: $radius-menu;
+  padding: 5px;
+  background-color: $mac_popover;
+  color: $mac_fg;
+  box-shadow: 0 0 0 0.5px $mac_border_strong, 0 8px 24px $mac_shadow_strong, 0 2px 6px $mac_shadow;
+}
+popover > arrow { background-color: $mac_popover; border: none; box-shadow: none; }
+
+popover.menu > contents { padding: 5px; min-width: 180px; }
+popover.menu modelbutton, popover.menu > contents modelbutton {
+  min-height: 22px;
+  padding: 1px 8px;
+  border-radius: $radius-item;
+  color: $mac_fg;
+  font-weight: 400;
+}
+popover.menu modelbutton:hover, popover.menu modelbutton:focus,
+popover.menu modelbutton:selected {
+  background-color: $mac_accent;
+  color: #ffffff;
+}
+popover.menu modelbutton:hover accelerator,
+popover.menu modelbutton:selected accelerator { color: a(white, 0.75); }
+popover.menu modelbutton accelerator { color: $mac_fg_dim; }
+popover.menu modelbutton:disabled { color: $mac_fg_disabled; }
+popover.menu separator, popover separator {
+  min-height: 1px;
+  margin: 4px 8px;
+  background-color: $mac_separator;
+}
+popover.menu check, popover.menu radio {
+  background: none;
+  box-shadow: none;
+  color: inherit;
+}
+popover.menu check:checked { -gtk-icon-source: -gtk-icontheme("object-select-symbolic"); }
+
+// Dropdown lists
+popover listview > row, popover list > row {
+  min-height: 22px;
+  border-radius: $radius-item;
+  padding: 2px 8px;
+}
+popover listview > row:hover, popover listview > row:selected,
+popover list > row:hover {
+  background-color: $mac_accent;
+  color: #ffffff;
+}
+
+tooltip, tooltip.background {
+  border-radius: 6px;
+  padding: 4px 8px;
+  background-color: $mac_tooltip;
+  color: $mac_fg;
+  box-shadow: 0 0 0 0.5px $mac_border_strong, 0 3px 8px $mac_shadow;
+  font-size: 11px;
+}
+tooltip > box { border-spacing: 4px; }
+
+// ───────────────────────── Dialogs ─────────────────────────
+
+dialog.alert sheet, dialog.alert .dialog-contents, window.messagedialog,
+dialog-host > dialog.alert > widget > sheet {
+  border-radius: 22px;
+}
+dialog.alert .heading, dialog.alert .title-2 { font-size: 13px; font-weight: 700; }
+dialog.alert .response-area > button {
+  border-radius: 999px;
+  min-height: 28px;
+  margin: 4px;
+}
+dialog-host > dialog > widget > sheet,
+dialog-host > dialog.floating sheet {
+  border-radius: $radius-window;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3), 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+// ───────────────────────── Scrollbars ─────────────────────────
+
+scrollbar { background: none; border: none; }
+scrollbar > range > trough { background: none; }
+// libadwaita pads the slider with an 8px transparent border (bigger hit area)
+// and a matching -8px margin; keep that geometry and only change the look.
+scrollbar > range > trough > slider {
+  min-width: 7px;
+  min-height: 7px;
+  margin: -8px;
+  border: 8px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  background-color: a($mac_fg_solid, 0.42);
+  outline: none;
+}
+scrollbar.vertical > range > trough > slider { min-height: 32px; }
+scrollbar.horizontal > range > trough > slider { min-width: 32px; }
+scrollbar.overlay-indicator:not(.hovering) > range > trough > slider { min-width: 5px; min-height: 5px; }
+scrollbar.vertical.overlay-indicator:not(.hovering) > range > trough > slider { min-height: 32px; }
+scrollbar.horizontal.overlay-indicator:not(.hovering) > range > trough > slider { min-width: 32px; }
+scrollbar.hovering > range > trough > slider { min-width: 9px; min-height: 9px; background-color: a($mac_fg_solid, 0.55); }
+scrollbar.overlay-indicator.hovering > range > trough { background-color: a($mac_fg_solid, 0.04); }
+
+// ───────────────────────── Tabs ─────────────────────────
+
+tabbar .box { background: none; box-shadow: none; padding: 4px; }
+tabbar tab {
+  border-radius: $radius-control;
+  min-height: 26px;
+}
+tabbar tab:selected {
+  background-color: $mac_control;
+  box-shadow: 0 0 0 0.5px $mac_border, 0 1px 2px $mac_shadow;
+}
+tabbar tab:hover:not(:selected) { background-color: $mac_fill; }
+notebook > header > tabs > tab { border-radius: $radius-item; min-height: 24px; }
+notebook > header > tabs > tab:checked { background-color: $mac_control; box-shadow: 0 0 0 0.5px $mac_border; }
+
+// ───────────────────────── Misc ─────────────────────────
+
+.dim-label, label.dim-label { color: $mac_fg_dim; opacity: 1; }
+.heading { font-weight: 700; }
+.title-1 { font-weight: 700; font-size: 26px; }
+.title-2 { font-weight: 700; font-size: 20px; }
+.title-3 { font-weight: 600; font-size: 17px; }
+.title-4 { font-weight: 600; font-size: 15px; }
+.caption { font-size: 11px; }
+separator { background-color: $mac_separator; min-width: 1px; min-height: 1px; }
+toast { border-radius: 999px; background-color: $mac_popover; color: $mac_fg;
+        box-shadow: 0 0 0 0.5px $mac_border_strong, 0 6px 18px $mac_shadow_strong; }
+.card { border-radius: $radius-card; background-color: $mac_card; box-shadow: 0 0 0 0.5px $mac_border; }
+statuspage > scrolledwindow > viewport > box > clamp > box > .title { font-weight: 700; }
+banner > revealer > widget { background-color: a($mac_accent, 0.15); }

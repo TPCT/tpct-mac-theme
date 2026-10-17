@@ -1,0 +1,35 @@
+// SCSS handles for GTK named colors (@mac_*) and GTK color functions.
+$mac_accent: unquote("@mac_accent");
+$mac_accent_active: unquote("@mac_accent_active");
+$mac_accent_hover: unquote("@mac_accent_hover");
+$mac_border: unquote("@mac_border");
+$mac_border_strong: unquote("@mac_border_strong");
+$mac_card: unquote("@mac_card");
+$mac_control: unquote("@mac_control");
+$mac_control_active: unquote("@mac_control_active");
+$mac_control_hover: unquote("@mac_control_hover");
+$mac_fg: unquote("@mac_fg");
+$mac_fg_dim: unquote("@mac_fg_dim");
+$mac_fg_disabled: unquote("@mac_fg_disabled");
+$mac_fg_solid: unquote("@mac_fg_solid");
+$mac_fill: unquote("@mac_fill");
+$mac_fill_active: unquote("@mac_fill_active");
+$mac_fill_hover: unquote("@mac_fill_hover");
+$mac_inactive_dot: unquote("@mac_inactive_dot");
+$mac_knob: unquote("@mac_knob");
+$mac_segment: unquote("@mac_segment");
+$mac_segment_fg: unquote("@mac_segment_fg");
+$mac_popover: unquote("@mac_popover");
+$mac_red: unquote("@mac_red");
+$mac_selection: unquote("@mac_selection");
+$mac_separator: unquote("@mac_separator");
+$mac_shadow: unquote("@mac_shadow");
+$mac_shadow_strong: unquote("@mac_shadow_strong");
+$mac_sidebar: unquote("@mac_sidebar");
+$mac_tooltip: unquote("@mac_tooltip");
+$mac_track: unquote("@mac_track");
+$mac_view: unquote("@mac_view");
+$headerbar_bg_color: unquote("@headerbar_bg_color");
+
+@function a($c, $x) { @return unquote("alpha(#{$c}, #{$x})"); }
+@function sh($c, $x) { @return unquote("shade(#{$c}, #{$x})"); }

@@ -1,0 +1,369 @@
+// TPCT Mac — GNOME Shell theme. Built once per variant: $variant is set by
+// the small wrapper files gnome-shell-dark.scss / gnome-shell-light.scss.
+
+@import "../palette";
+
+$p: if($variant == dark, $dark, $light);
+$is-dark: $variant == dark;
+
+$fg:          map-get($p, fg-solid);
+$fg-dim:      map-get($p, fg-dim);
+$accent:      map-get($p, accent);
+$red:         map-get($p, red);
+
+// Translucent "glass" surfaces (Blur my Shell supplies the blur behind them).
+$glass:        if($is-dark, rgba(36, 36, 40, 0.80), rgba(246, 246, 248, 0.82));
+$glass-strong: if($is-dark, rgba(36, 36, 40, 0.92), rgba(250, 250, 252, 0.94));
+$glass-border: if($is-dark, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.12));
+$glass-hi:     if($is-dark, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.55));
+$tile:         if($is-dark, rgba(255, 255, 255, 0.09), rgba(0, 0, 0, 0.05));
+$tile-hover:   if($is-dark, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.08));
+$tile-active:  if($is-dark, rgba(255, 255, 255, 0.20), rgba(0, 0, 0, 0.12));
+$separator:    if($is-dark, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.10));
+$track:        if($is-dark, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.10));
+$shadow:       0 8px 28px rgba(0, 0, 0, if($is-dark, 0.45, 0.22));
+
+// Menu bar text sits on the wallpaper, so it is white in both variants
+// unless the light variant's frosted bar is opaque enough for dark text.
+$panel-bg: if($is-dark, rgba(0, 0, 0, 0.22), rgba(255, 255, 255, 0.55));
+$panel-fg: if($is-dark, #ffffff, rgba(0, 0, 0, 0.85));
+
+@import url("resource:///org/gnome/shell/theme/gnome-shell-#{$variant}.css");
+
+stage {
+  font-family: "SF Pro Text", "Inter Variable", "Inter", sans-serif;
+  color: $fg;
+}
+
+// ───────────────────────── Menu bar ─────────────────────────
+
+#panel {
+  height: 30px;
+  background-color: $panel-bg;
+  font-weight: 500;
+  font-size: 13px;
+  box-shadow: none;
+
+  .panel-button {
+    color: $panel-fg;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 3px solid transparent;
+    -natural-hpadding: 10px;
+    -minimum-hpadding: 6px;
+    box-shadow: none;
+
+    &:hover, &:focus { box-shadow: inset 0 0 0 100px rgba(if($is-dark, 255, 0), if($is-dark, 255, 0), if($is-dark, 255, 0), 0.14); }
+    &:active, &:checked { box-shadow: inset 0 0 0 100px rgba(if($is-dark, 255, 0), if($is-dark, 255, 0), if($is-dark, 255, 0), 0.24); }
+    &.clock-display {
+      color: $panel-fg;
+      box-shadow: none;
+      .clock { font-weight: 500; }
+      &:hover { box-shadow: inset 0 0 0 100px rgba(if($is-dark, 255, 0), if($is-dark, 255, 0), if($is-dark, 255, 0), 0.14); }
+    }
+    .system-status-icon { icon-size: 16px; padding: 0 3px; margin: 0 2px; }
+    &#panelActivities .workspace-dot { background-color: $panel-fg; }
+  }
+
+  // App name in the global menu is bold, like macOS
+  .tpct-appmenu-name { font-weight: 700; }
+  .tpct-appmenu-item { padding: 0 2px; }
+}
+
+#panel.solid, #panel:overview { background-color: transparent; }
+#panel.login-screen, #panel.unlock-screen, #panel:overview { background-color: transparent; }
+
+// ───────────────────────── Menus ─────────────────────────
+
+.popup-menu { color: $fg; min-width: 14em; }
+.popup-menu-boxpointer, .candidate-popup-boxpointer { -arrow-rise: 4px; }
+
+.popup-menu-content, .candidate-popup-content {
+  padding: 5px;
+  background-color: $glass;
+  // GNOME Shell writes an inline border-radius on menus; !important wins over it.
+  border-radius: $radius-menu !important;
+  border: 1px solid $glass-border;
+  box-shadow: $shadow;
+}
+
+.popup-menu-item {
+  padding: 3px 10px;
+  border-radius: $radius-item;
+  color: $fg;
+  font-weight: normal;
+  spacing: 8px;
+
+  &:hover, &:focus, &:selected {
+    color: #ffffff;
+    background-color: $accent;
+  }
+  &:active { color: #ffffff; background-color: darken($accent, 6%); }
+  &:checked { color: $fg; background-color: $tile; border-radius: $radius-item $radius-item 0 0 !important; }
+  &:insensitive { color: $fg-dim; background-color: transparent; }
+}
+.popup-inactive-menu-item { color: $fg; }
+.popup-inactive-menu-item:insensitive { color: $fg-dim; }
+
+.popup-sub-menu {
+  background-color: $tile;
+  border-radius: 0 0 $radius-item $radius-item;
+  border: none;
+  .popup-menu-item { border-radius: $radius-item; }
+}
+
+.popup-separator-menu-item {
+  padding: 4px 8px;
+  .popup-separator-menu-item-separator { height: 1px; background-color: $separator; }
+}
+
+// ───────────────────────── Buttons ─────────────────────────
+
+.button, .icon-button, .modal-dialog .modal-dialog-button-box .modal-dialog-button {
+  border-radius: $radius-control;
+  background-color: $tile;
+  color: $fg;
+  box-shadow: none;
+  &:hover { background-color: $tile-hover; }
+  &:active, &:checked { background-color: $tile-active; }
+  &:focus { box-shadow: inset 0 0 0 2px transparentize($accent, 0.4) !important; }
+}
+.button.default, .icon-button.default {
+  background-color: $accent;
+  color: #ffffff;
+  &:hover { background-color: lighten($accent, 4%); }
+}
+.button.flat, .icon-button.flat { background-color: transparent; }
+.icon-button { border-radius: 999px; }
+
+// ───────────────────────── Switches & sliders ─────────────────────────
+
+.toggle-switch {
+  width: 38px;
+  border-radius: 999px;
+  background: $track;
+  color: transparent;
+  &:hover { background: $tile-hover; }
+  StIcon { icon-size: 0; }
+  .handle {
+    margin: 1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  &:checked { background: $accent; color: transparent; }
+  &:checked:hover { background: lighten($accent, 4%); }
+  &:checked .handle { background: #ffffff; }
+}
+
+.slider {
+  color: #ffffff;
+  -barlevel-height: 6px;
+  -barlevel-background-color: $track;
+  -barlevel-active-background-color: if($is-dark, #ffffff, $accent);
+  -barlevel-overdrive-color: $red;
+  -slider-handle-radius: 9px;
+  -slider-handle-border-width: 0.5px;
+  -slider-handle-border-color: rgba(0, 0, 0, 0.15);
+}
+
+// ───────────────────────── Control Center (quick settings) ─────────────────────────
+
+.quick-settings {
+  padding: 12px;
+  border-radius: 24px !important;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+}
+.quick-settings-grid { spacing-rows: 10px; spacing-columns: 10px; }
+
+.quick-toggle, .quick-toggle-has-menu {
+  border-radius: 16px;
+  min-height: 52px;
+}
+.quick-toggle {
+  color: $fg;
+  background-color: $tile;
+  box-shadow: none;
+  &:hover { background-color: $tile-hover; }
+  &:checked { color: $fg; background-color: $tile; }
+  &:checked:hover { background-color: $tile-hover; }
+  .quick-toggle-title { font-weight: 600; font-size: 12px; }
+  .quick-toggle-subtitle { font-weight: normal; font-size: 11px; color: $fg-dim; }
+  // Round icon bubble that turns blue when the toggle is on
+  .quick-toggle-icon {
+    icon-size: 16px;
+    padding: 7px;
+    border-radius: 999px;
+    background-color: $tile-active;
+    color: $fg;
+  }
+  &:checked .quick-toggle-icon { background-color: $accent; color: #ffffff; }
+}
+.quick-toggle-has-menu {
+  .quick-toggle:ltr { border-radius: 16px 0 0 16px; }
+  .quick-toggle:rtl { border-radius: 0 16px 16px 0; }
+  .quick-toggle:last-child { border-radius: 16px; }
+  .quick-toggle-menu-button {
+    color: $fg;
+    background-color: $tile;
+    &:hover { background-color: $tile-hover; }
+    &:ltr { border-radius: 0 16px 16px 0; }
+    &:rtl { border-radius: 16px 0 0 16px; }
+  }
+  &:checked .quick-toggle-menu-button { color: $fg; background-color: $tile; }
+  .quick-toggle-separator { background-color: $separator; }
+  &:checked .quick-toggle-separator { background-color: $separator; }
+}
+
+.quick-toggle-menu {
+  border-radius: 16px;
+  background-color: $glass-strong;
+  border: 1px solid $glass-border;
+  padding: 10px;
+  .header .icon { background-color: $accent; color: #ffffff; border-radius: 999px; }
+}
+
+.quick-slider {
+  .slider { -barlevel-height: 22px; -slider-handle-radius: 11px; }
+}
+
+// ───────────────────────── Notifications & calendar ─────────────────────────
+
+.message {
+  border-radius: 16px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+  color: $fg;
+  &:hover { background-color: $glass-strong; }
+  .message-title { font-weight: 600; }
+  .message-body { color: $fg-dim; }
+}
+.message-list .message-list-placeholder { color: $fg-dim; }
+
+.events-button, .world-clocks-button, .weather-button, .calendar, .datemenu-today-button {
+  border-radius: 16px;
+  background-color: $tile;
+  color: $fg;
+  &:hover { background-color: $tile-hover; }
+}
+.calendar .calendar-day.calendar-today, .calendar .calendar-day.calendar-today:selected {
+  background-color: $red;
+  color: #ffffff;
+}
+.calendar .calendar-day:selected { background-color: $accent; color: #ffffff; }
+
+.notification-banner, .notification-banner:hover, .notification-banner:focus {
+  border-radius: 18px;
+  background-color: $glass-strong;
+  border: 1px solid $glass-border;
+  box-shadow: $shadow;
+}
+
+// ───────────────────────── Dock / dash ─────────────────────────
+
+#dash .dash-background,
+#dashtodockContainer .dash-background {
+  background-color: if($is-dark, rgba(44, 44, 48, 0.62), rgba(246, 246, 248, 0.55));
+  border: 1px solid if($is-dark, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.55));
+  border-radius: 22px;
+  box-shadow: none;
+}
+#dash .dash-item-container .overview-tile .overview-icon,
+#dash .dash-item-container .show-apps .overview-icon {
+  background-color: transparent;
+  border-radius: 14px;
+}
+#dash .dash-item-container .overview-tile:hover .overview-icon,
+#dash .dash-item-container .show-apps:hover .overview-icon {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+#dash .dash-separator { background-color: rgba(255, 255, 255, 0.25); width: 1px; }
+.dash-label {
+  border-radius: 8px;
+  padding: 4px 10px;
+  background-color: $glass-strong;
+  color: $fg;
+  border: 1px solid $glass-border;
+  font-weight: normal;
+}
+
+// ───────────────────────── Overview / Launchpad ─────────────────────────
+
+.search-entry {
+  border-radius: 10px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+  color: $fg;
+  &:focus { border-color: $accent; box-shadow: 0 0 0 3px transparentize($accent, 0.55); }
+}
+.overview-tile, .grid-search-result, .app-folder {
+  border-radius: 18px;
+  &:hover, &:focus { background-color: rgba(255, 255, 255, 0.10); }
+}
+.app-folder-dialog {
+  border-radius: 28px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+}
+.window-caption {
+  border-radius: 8px;
+  background-color: $glass-strong;
+  color: $fg;
+  font-weight: normal;
+}
+.workspace-thumbnail { border-radius: 10px; }
+.workspace-background { border-radius: 16px; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); }
+
+// ───────────────────────── OSD, dialogs, switcher ─────────────────────────
+
+.osd-window {
+  border-radius: 18px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+  color: $fg;
+  box-shadow: $shadow;
+  .level { -barlevel-height: 6px; -barlevel-background-color: $track; -barlevel-active-background-color: $fg; }
+}
+
+.modal-dialog {
+  border-radius: 22px;
+  background-color: $glass-strong;
+  border: 1px solid $glass-border;
+  color: $fg;
+  box-shadow: $shadow;
+  .modal-dialog-content-box { padding: 20px; }
+  .modal-dialog-button-box { padding: 12px; spacing: 10px; background-color: transparent; border: none; }
+  .modal-dialog-button-box .modal-dialog-button { border-radius: 999px; padding: 8px 20px; }
+  .modal-dialog-button-box .modal-dialog-button:default { background-color: $accent; color: #ffffff; }
+}
+
+.switcher-list, .workspace-switcher {
+  border-radius: 22px;
+  background-color: $glass;
+  border: 1px solid $glass-border;
+  box-shadow: $shadow;
+  .item-box { border-radius: 14px; }
+  .item-box:selected { background-color: $tile-active; }
+}
+
+.tile-preview {
+  border-radius: 14px;
+  background-color: transparentize($accent, 0.75);
+  border: 1px solid transparentize($accent, 0.3);
+}
+
+// ───────────────────────── Lock screen ─────────────────────────
+
+.unlock-dialog-clock {
+  .unlock-dialog-clock-time { font-size: 86px; font-weight: 600; }
+  .unlock-dialog-clock-date { font-size: 20px; font-weight: 500; }
+}
+.login-dialog-prompt-entry, .unlock-dialog .login-dialog-prompt-entry {
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
