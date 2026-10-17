@@ -381,13 +381,16 @@ stage {
     StIcon { icon-size: 16px; }
     &:hover { background-color: $tile-hover; }
   }
+  // Battery chip: plain glyph + percentage, like the macOS battery menu.
   .power-item {
     min-height: 36px;
     height: 36px;
-    padding: 0 14px 0 6px;
+    padding: 0 14px 0 12px;
     border-radius: 999px;
     background-color: $tile;
     &:hover { background-color: $tile-hover; }
-    StIcon { icon-size: 16px; padding: 6px; border-radius: 999px; background-color: $tile-active; }
+    > StBoxLayout { spacing: 6px; }
+    StIcon { icon-size: 18px; padding: 0; margin: 0; background-color: transparent; border-radius: 0; }
+    StLabel { font-weight: 600; font-size: 13px; }
   }
 }

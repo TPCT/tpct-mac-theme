@@ -53,15 +53,44 @@
 .tpct-widget-caption { font-size: 11px; font-weight: 600; opacity: 0.6; }
 
 /* Calendar */
-.tpct-widget-calendar { spacing: 14px; }
-.tpct-cal-today { width: 110px; }
+.tpct-widget-calendar { spacing: 12px; }
+.tpct-cal-today { width: 118px; }
 .tpct-cal-weekday { color: #ff3b30; font-size: 12px; font-weight: 700; }
-.tpct-cal-day { font-size: 44px; font-weight: 300; }
-.tpct-cal-note { font-size: 11px; opacity: 0.55; }
-.tpct-cal-month-name { color: #ff3b30; font-size: 11px; font-weight: 700; padding-bottom: 4px; }
+.tpct-cal-day { font-size: 46px; font-weight: 500; padding-top: 2px; }
+.tpct-cal-events { spacing: 4px; }
+.tpct-cal-note { font-size: 11px; font-weight: 500; opacity: 0.55; }
+.tpct-cal-event { spacing: 6px; }
+.tpct-cal-event-bar { width: 3px; border-radius: 2px; background-color: #ff3b30; }
+.tpct-cal-event-title { font-size: 11px; font-weight: 700; }
+.tpct-cal-event-time { font-size: 10px; opacity: 0.6; }
+.tpct-cal-month-name { color: #ff3b30; font-size: 11px; font-weight: 700; padding-bottom: 2px; }
 .tpct-cal-head { font-size: 9px; font-weight: 700; opacity: 0.5; }
-.tpct-cal-cell { font-size: 10px; font-weight: 600; min-width: 18px; min-height: 16px; text-align: center; border-radius: 999px; }
+.tpct-cal-cell { width: 19px; height: 19px; border-radius: 999px; font-size: 10px; font-weight: 600; }
 .tpct-cal-cell-today { background-color: #ff3b30; color: #ffffff; }
+
+/* World clock */
+.tpct-widget-world { spacing: 4px; padding: 14px 10px; }
+.tpct-world-item { spacing: 4px; }
+.tpct-world-city { font-size: 11px; font-weight: 700; }
+.tpct-world-offset { font-size: 9px; font-weight: 500; opacity: 0.55; }
+
+/* Music */
+.tpct-widget-music { spacing: 14px; }
+.tpct-music-art { border-radius: 12px; background-color: rgba(128, 128, 128, 0.25); }
+.tpct-music-art-icon { color: rgba(255, 255, 255, 0.7); }
+.tpct-music-info { spacing: 2px; }
+.tpct-music-source { color: #fa2d48; font-size: 10px; font-weight: 700; }
+.tpct-music-title { font-size: 13px; font-weight: 700; }
+.tpct-music-artist { font-size: 12px; opacity: 0.6; }
+.tpct-music-controls { spacing: 6px; padding-top: 8px; }
+.tpct-music-button { border-radius: 999px; padding: 6px; }
+.tpct-music-button:hover { background-color: rgba(128, 128, 128, 0.25); }
+
+/* Photos */
+.tpct-widget-photo { padding: 12px; background-color: rgba(128, 128, 128, 0.3); }
+.tpct-photo-caption { color: #ffffff; font-size: 13px; font-weight: 700; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
+
+.tpct-widget:hover { border-color: rgba(255, 255, 255, 0.28); }
 
 /* Battery */
 .tpct-widget-battery { spacing: 6px; }
