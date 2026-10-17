@@ -364,8 +364,19 @@ stage {
 // ───────────────────────── Lock screen ─────────────────────────
 
 .unlock-dialog-clock {
-  .unlock-dialog-clock-time { font-size: 86px; font-weight: 600; }
-  .unlock-dialog-clock-date { font-size: 20px; font-weight: 500; }
+  // macOS lock screen: big, heavy time with the date in medium weight
+  spacing: 4px;
+  .unlock-dialog-clock-time { font-size: 112px; font-weight: 700; color: rgba(255, 255, 255, 0.92); }
+  .unlock-dialog-clock-date { font-size: 22px; font-weight: 600; color: rgba(255, 255, 255, 0.85); }
+  .unlock-dialog-clock-hint { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+}
+.unlock-dialog .user-widget-label { font-size: 15px; font-weight: 600; color: #ffffff; }
+.unlock-dialog .user-widget.vertical .user-icon { icon-size: 72px; border-radius: 999px; }
+.unlock-dialog-notifications-container .unlock-dialog-notification-source,
+.unlock-dialog-notifications-container .message {
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
 }
 .login-dialog-prompt-entry, .unlock-dialog .login-dialog-prompt-entry {
   border-radius: 999px;

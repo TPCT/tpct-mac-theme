@@ -139,7 +139,7 @@ if [[ -d "$D2D" ]]; then
   for kv in "dock-location 0" "animation-magnify 0.5" "animation-spread 0.75" "open-app-animation true" \
             "trash-icon true" "apps-icon false" "icon-shadow true" "border-radius 4.0" \
             "background-color (0.17, 0.17, 0.19, 0.55)" "running-indicator-color (1.0, 1.0, 1.0, 0.85)" \
-            "separator-thickness 1" "lamp-app-animation false"; do
+            "separator-thickness 1" "lamp-app-animation false" "downloads-icon true"; do
     # shellcheck disable=SC2086
     gsettings --schemadir "$D2D" set $K ${kv%% *} "${kv#* }" 2>/dev/null || true
   done

@@ -17,6 +17,7 @@ import {AppMenuRegistrar, DbusMenuSource, GtkMenuSource} from './menuSources.js'
 import {DesktopWidgets} from './widgets.js';
 import {AppleMenu} from './appleMenu.js';
 import {WindowButtons} from './windowButtons.js';
+import {SpotlightButton} from './spotlightButton.js';
 
 const FINDER_IDS = ['org.gnome.Nautilus.desktop', 'nautilus.desktop'];
 
@@ -459,6 +460,12 @@ export default class TpctMacShell extends Extension {
         this._dateParent.remove_child(dateMenu.container);
         Main.panel._rightBox.add_child(dateMenu.container);
 
+        // 🔍 Spotlight, just before the clock as on macOS
+        this._spotlight = new SpotlightButton();
+        Main.panel.addToStatusArea('tpctSpotlight', this._spotlight);
+        this._spotlight.container.get_parent()?.remove_child(this._spotlight.container);
+        Main.panel._rightBox.insert_child_below(this._spotlight.container, dateMenu.container);
+
         // No Activities pill; the Apple menu / hot corner replace it.
         this._activities = Main.panel.statusArea.activities;
         this._activities?.container.hide();
@@ -601,6 +608,8 @@ export default class TpctMacShell extends Extension {
         this._widgets = null;
         this._windowButtons?.destroy();
         this._windowButtons = null;
+        this._spotlight?.destroy();
+        this._spotlight = null;
         this._appleMenu?.destroy();
         this._appleMenu = null;
         if (this._extStateId)
