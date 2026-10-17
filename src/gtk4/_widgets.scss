@@ -648,7 +648,9 @@ headerbar.default-decoration .title { font-size: 13px; font-weight: 700; }
 // Settings sets 12px margins on its row boxes in code; trim them from CSS.
 .navigation-sidebar > row:not(.sidebar-row) > *:not(revealer) { margin-top: -5px; margin-bottom: -5px; }
 // Finder's rows wrap their content in a revealer; only Settings-style rows get tiles.
-.navigation-sidebar > row > :not(revealer) image {
+.navigation-sidebar > row > :not(revealer) image,
+.navigation-sidebar > row:selected > :not(revealer) image,
+.navigation-sidebar > row:hover > :not(revealer) image {
   min-width: 22px;
   min-height: 22px;
   padding: 0;
@@ -657,6 +659,7 @@ headerbar.default-decoration .title { font-size: 13px; font-weight: 700; }
   color: #ffffff;
   background-color: #8e8e93;
 }
+.navigation-sidebar > row:selected > :not(revealer) image { color: #ffffff; }
 .navigation-sidebar > row:nth-child(1) > :not(revealer) image { background-color: #0a84ff; }
 .navigation-sidebar > row:nth-child(2) > :not(revealer) image { background-color: #0a84ff; }
 .navigation-sidebar > row:nth-child(3) > :not(revealer) image { background-color: #0a84ff; }
