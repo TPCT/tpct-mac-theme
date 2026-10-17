@@ -44,6 +44,15 @@ Recommended companions (installed separately):
 
 Remove with `./install.sh --remove`.
 
+### Login screen (optional, needs sudo)
+
+```bash
+gdm/install-gdm.sh            # macOS-style login screen
+gdm/install-gdm.sh --remove   # back to the stock one
+```
+
+It registers a higher-priority `gdm-theme.gresource` alternative built from your current GDM theme plus the macOS styles and a blurred wallpaper; no Ubuntu files are modified.
+
 ## Limits
 
 - Snap apps are sandboxed and cannot read user themes. Use the deb or Flatpak build of an app to get the theme.

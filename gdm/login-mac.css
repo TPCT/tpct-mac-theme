@@ -1,0 +1,133 @@
+
+/* ═════════════════ TPCT Mac: macOS-style login screen ═════════════════ */
+
+stage { font-family: "SF Pro Text", "Inter Variable", "Inter", sans-serif; }
+
+/* Wallpaper, pre-blurred at build time (macOS blurs the login wallpaper). */
+#lockDialogGroup {
+  background-color: #000000;
+  background-image: url("resource:///org/gnome/shell/theme/tpct-login.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Clear menu bar with white items */
+#panel.login-screen, #panel.unlock-screen, #panel:overview { background-color: transparent; }
+#panel.login-screen .panel-button, #panel.unlock-screen .panel-button {
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.login-dialog { background-color: transparent; border: none; }
+
+/* User list: big round avatar with the name under it, no card behind */
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:selected {
+  background-color: transparent;
+  border-radius: 22px;
+  padding: 14px 22px;
+  box-shadow: none;
+}
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:hover,
+.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:focus {
+  background-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+}
+.login-dialog .user-widget.vertical .user-icon,
+.unlock-dialog .user-widget.vertical .user-icon {
+  icon-size: 96px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.20);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+.login-dialog .user-widget.vertical .user-icon StIcon,
+.unlock-dialog .user-widget.vertical .user-icon StIcon { padding: 22px; }
+.login-dialog .user-widget-label, .unlock-dialog .user-widget-label,
+.login-dialog .user-widget.vertical .user-widget-label {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Password field: small frosted pill, like macOS */
+.login-dialog .login-dialog-prompt-entry,
+.login-dialog .login-dialog-prompt-entry:hover,
+.login-dialog .login-dialog-prompt-entry:focus {
+  min-width: 200px;
+  min-height: 28px;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow: none !important;
+  caret-color: #ffffff;
+  selection-background-color: rgba(255, 255, 255, 0.35);
+  selected-color: #ffffff;
+  font-size: 13px;
+}
+.login-dialog .login-dialog-prompt-entry StLabel.hint-text { color: rgba(255, 255, 255, 0.65); }
+.login-dialog-prompt-layout { spacing: 10px; }
+
+.login-dialog-message-hint, .login-dialog-message, .login-dialog-banner {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+.login-dialog-message-warning { color: #ffd60a; }
+
+/* "Not listed?" and session/back buttons: quiet, translucent */
+.login-dialog-not-listed-label { color: rgba(255, 255, 255, 0.75); font-size: 12px; font-weight: 500; }
+.login-dialog-not-listed-button:hover .login-dialog-not-listed-label,
+.login-dialog-not-listed-button:focus .login-dialog-not-listed-label { color: #ffffff; }
+.login-dialog-button.cancel-button,
+.login-dialog-button.switch-user-button,
+.login-dialog-button.login-dialog-session-list-button,
+.login-dialog-button.a11y-button {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+  border-radius: 999px;
+}
+.login-dialog-button.cancel-button:hover,
+.login-dialog-button.switch-user-button:hover,
+.login-dialog-button.login-dialog-session-list-button:hover,
+.login-dialog-button.a11y-button:hover { background-color: rgba(255, 255, 255, 0.28); }
+
+/* Menus on the login screen (session list, power) */
+.popup-menu-content {
+  background-color: rgba(36, 36, 40, 0.94);
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.popup-menu-item { border-radius: 6px; padding: 3px 10px; }
+.popup-menu-item:hover, .popup-menu-item:focus { background-color: #0a84ff; color: #ffffff; }
+
+/* No distro logo on a Mac login screen */
+.login-dialog-logo-bin { width: 0; height: 0; margin: 0; }
+
+/* User list: the list rows are horizontal, so make them a large avatar + name */
+.login-dialog .user-widget.horizontal .user-icon {
+  icon-size: 72px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.20);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.login-dialog .user-widget.horizontal .user-icon StIcon { padding: 16px; }
+.login-dialog .user-widget.horizontal { spacing: 14px; }
+.login-dialog .user-widget.horizontal .user-widget-label { font-size: 17px; font-weight: 600; color: #ffffff; }
+
+/* Bottom corner buttons (session gear, accessibility): small frosted circles */
+.login-dialog-button.login-dialog-session-list-button,
+.login-dialog-button.a11y-button {
+  padding: 8px;
+  min-width: 32px;
+  min-height: 32px;
+}
+.login-dialog-button.login-dialog-session-list-button StIcon,
+.login-dialog-button.a11y-button StIcon { icon-size: 16px; }
