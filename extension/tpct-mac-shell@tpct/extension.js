@@ -465,7 +465,10 @@ export default class TpctMacShell extends Extension {
         //  menu first, then the app menus.
         this._appleMenu = new AppleMenu();
         Main.panel.addToStatusArea('tpctAppleMenu', this._appleMenu, 0, 'left');
-        Main.panel.statusArea.LogoMenu?.container.hide();
+        // Logo Menu draws a second  button; hide it whenever it shows up.
+        const hideLogoMenu = () => Main.panel.statusArea.LogoMenu?.container.hide();
+        hideLogoMenu();
+        this._extStateId = Main.extensionManager.connect('extension-state-changed', hideLogoMenu);
 
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
@@ -534,6 +537,9 @@ export default class TpctMacShell extends Extension {
         this._widgets = null;
         this._appleMenu?.destroy();
         this._appleMenu = null;
+        if (this._extStateId)
+            Main.extensionManager.disconnect(this._extStateId);
+        this._extStateId = 0;
         Main.panel.statusArea.LogoMenu?.container.show();
         this._globalMenu?.destroy();
         this._globalMenu = null;
