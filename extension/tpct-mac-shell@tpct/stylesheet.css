@@ -109,3 +109,18 @@
 .tpct-weather-temp { font-size: 40px; font-weight: 300; }
 .tpct-weather-icon { color: #ffffff; padding-bottom: 2px; }
 .tpct-weather-summary { font-size: 11px; font-weight: 600; }
+
+
+/* ───────────── Apple menu ───────────── */
+#panel .panel-button.tpct-apple-button { -natural-hpadding: 12px; -minimum-hpadding: 8px; }
+.tpct-apple-icon { icon-size: 16px; }
+
+/* Force Quit Applications */
+.tpct-force-quit .modal-dialog-content-box { spacing: 8px; }
+.tpct-force-quit-title { font-size: 15px; font-weight: 700; }
+.tpct-force-quit-hint { font-size: 12px; opacity: 0.65; }
+.tpct-force-quit-scroll { min-height: 220px; max-height: 320px; min-width: 360px; border-radius: 10px; background-color: rgba(128, 128, 128, 0.12); padding: 4px; }
+.tpct-force-quit-row { border-radius: 6px; padding: 4px 8px; }
+.tpct-force-quit-row-box { spacing: 8px; }
+.tpct-force-quit-row:hover { background-color: rgba(128, 128, 128, 0.18); }
+.tpct-force-quit-row:checked { background-color: #0a84ff; color: #ffffff; }

@@ -15,6 +15,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {AppMenuRegistrar, DbusMenuSource, GtkMenuSource} from './menuSources.js';
 import {DesktopWidgets} from './widgets.js';
+import {AppleMenu} from './appleMenu.js';
 
 const FINDER_IDS = ['org.gnome.Nautilus.desktop', 'nautilus.desktop'];
 
@@ -461,6 +462,11 @@ export default class TpctMacShell extends Extension {
         this._activities = Main.panel.statusArea.activities;
         this._activities?.container.hide();
 
+        //  menu first, then the app menus.
+        this._appleMenu = new AppleMenu();
+        Main.panel.addToStatusArea('tpctAppleMenu', this._appleMenu, 0, 'left');
+        Main.panel.statusArea.LogoMenu?.container.hide();
+
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
 
@@ -526,6 +532,9 @@ export default class TpctMacShell extends Extension {
 
         this._widgets?.destroy();
         this._widgets = null;
+        this._appleMenu?.destroy();
+        this._appleMenu = null;
+        Main.panel.statusArea.LogoMenu?.container.show();
         this._globalMenu?.destroy();
         this._globalMenu = null;
 

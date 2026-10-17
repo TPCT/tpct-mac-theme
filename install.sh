@@ -84,6 +84,9 @@ cp -r "extension/$EXT_UUID" "$EXTDIR/$EXT_UUID"
 gset org.gnome.shell disable-user-extensions false
 enable_extension "user-theme@gnome-shell-extensions.gcampax.github.com"
 enable_extension "$EXT_UUID"
+# Our extension draws the  menu; Logo Menu would add a second one.
+list=$(gsettings get org.gnome.shell enabled-extensions | sed "s/, 'logomenu@aryan_k'//; s/'logomenu@aryan_k', //; s/'logomenu@aryan_k'//")
+gsettings set org.gnome.shell enabled-extensions "$list"
 
 echo "==> Applying settings"
 scheme=$(gsettings get org.gnome.desktop.interface color-scheme)
