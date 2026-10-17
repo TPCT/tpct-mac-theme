@@ -114,6 +114,17 @@ gset org.gnome.shell.keybindings screenshot "['<Shift><Super>3', '<Shift>Print']
 gset org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>4', '<Shift><Super>5', 'Print']"
 gset org.gnome.desktop.wm.keybindings close "['<Super>w', '<Alt>F4']"
 
+# Desktop icons like the macOS desktop: from the top-right corner, drives
+# shown, no Home/Trash icons.
+if gsettings list-schemas | grep -qx org.gnome.shell.extensions.ding; then
+  G=org.gnome.shell.extensions.ding
+  gset $G start-corner 'top-right'
+  gset $G show-home false
+  gset $G show-trash false
+  gset $G show-volumes true
+  gset $G add-volumes-opposite false
+fi
+
 # Dock (Ubuntu Dock / Dash to Dock): let the theme draw it.
 D=org.gnome.shell.extensions.dash-to-dock
 if gsettings list-schemas | grep -qx "$D"; then

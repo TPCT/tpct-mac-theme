@@ -729,3 +729,39 @@ window.ssd-frame > *, window.ssd-frame headerbar {
   box-shadow: none;
 }
 window.ssd-frame headerbar { padding: 0 8px; }
+
+// ───────────────────────── Finder file views ─────────────────────────
+
+// Icon view: no tinted cell; the selected icon gets a soft grey box and the
+// name a blue pill, like Finder.
+.nautilus-grid-view gridview > child,
+.nautilus-grid-view gridview > child:hover,
+.nautilus-grid-view gridview > child:selected,
+.nautilus-grid-view gridview > child:selected:hover {
+  background: none;
+  box-shadow: none;
+  color: $mac_fg;
+}
+.nautilus-grid-view gridview > child:selected .nautilus-view-cell > :first-child {
+  background-color: a($mac_fg_solid, 0.10);
+  border-radius: 8px;
+}
+.nautilus-grid-view gridview > child:selected .icon-ui-labels-box > label:first-child {
+  background-color: $mac_accent;
+  color: #ffffff;
+  border-radius: 5px;
+  padding: 0 2px;
+}
+.nautilus-grid-view gridview:not(:focus-within) > child:selected .icon-ui-labels-box > label:first-child {
+  background-color: a($mac_fg_solid, 0.18);
+  color: $mac_fg;
+}
+
+// List view: alternating rows, no gaps, accent selection.
+.nautilus-list-view columnview > listview { border-spacing: 0; padding-top: 4px; }
+.nautilus-list-view columnview > listview > row { border-radius: 6px; min-height: 24px; }
+.nautilus-list-view columnview > listview > row:nth-child(even):not(:selected) {
+  background-color: a($mac_fg_solid, 0.035);
+}
+.nautilus-list-view columnview > listview > row:selected { background-color: $mac_accent; color: #ffffff; }
+columnview > header > button { font-weight: 500; font-size: 12px; color: $mac_fg_dim; }
