@@ -697,3 +697,18 @@ headerbar.default-decoration .title { font-size: 13px; font-weight: 700; }
   background-color: #ff9f0a; color: #ffffff; font-size: 18px;
 }
 .math-buttons button.operator-button:hover, .math-buttons button.suggested-action:hover { background-color: #ffb340; }
+
+// Maximized windows: the traffic lights move to the menu bar (tpct-mac-shell),
+// so collapse the window's own copy.
+window.maximized windowcontrols,
+window.maximized windowcontrols > button,
+window.maximized windowcontrols > button > image,
+window.maximized headerbar windowcontrols > button.image-button:not(.titlebutton):not(.suggested-action) {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  opacity: 0;
+  -gtk-icon-size: 0;
+}

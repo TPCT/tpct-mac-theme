@@ -538,3 +538,15 @@ messagedialog.csd .dialog-action-area button:last-child {
 messagedialog .dialog-action-area button:hover { background-color: c(fill-hover); }
 messagedialog .dialog-action-area button.suggested-action,
 messagedialog .dialog-action-area button.default { background-color: $accent; color: #ffffff; }
+
+// Maximized windows: traffic lights live in the menu bar instead.
+.maximized headerbar button.titlebutton:not(.appmenu),
+.maximized .titlebar button.titlebutton:not(.appmenu) {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-width: 0;
+  opacity: 0;
+  -gtk-icon-transform: scale(0);
+}

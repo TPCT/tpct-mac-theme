@@ -16,6 +16,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {AppMenuRegistrar, DbusMenuSource, GtkMenuSource} from './menuSources.js';
 import {DesktopWidgets} from './widgets.js';
 import {AppleMenu} from './appleMenu.js';
+import {WindowButtons} from './windowButtons.js';
 
 const FINDER_IDS = ['org.gnome.Nautilus.desktop', 'nautilus.desktop'];
 
@@ -479,6 +480,7 @@ export default class TpctMacShell extends Extension {
         syncExtensions();
         this._extStateId = Main.extensionManager.connect('extension-state-changed', syncExtensions);
 
+        this._windowButtons = new WindowButtons();
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
 
@@ -594,6 +596,8 @@ export default class TpctMacShell extends Extension {
 
         this._widgets?.destroy();
         this._widgets = null;
+        this._windowButtons?.destroy();
+        this._windowButtons = null;
         this._appleMenu?.destroy();
         this._appleMenu = null;
         if (this._extStateId)
