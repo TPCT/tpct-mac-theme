@@ -286,5 +286,8 @@ if have flatpak; then
     --filesystem=xdg-data/themes:ro --env=GTK_THEME="TPCT-Mac-$V" 2>/dev/null || true
 fi
 
+echo "==> Third-party apps"
+apps/configure-apps.sh || true
+
 echo
 echo "Done. Log out and back in once so GNOME Shell loads the extension."
