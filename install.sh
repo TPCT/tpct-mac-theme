@@ -115,6 +115,8 @@ if [[ -d "$BMS" ]]; then
     # shellcheck disable=SC2086
     gsettings --schemadir "$BMS" set $P $kv 2>/dev/null || true
   done
+  # Same problem behind the dock: its blur is not clipped to the dock's corners.
+  gsettings --schemadir "$BMS" set org.gnome.shell.extensions.blur-my-shell.dash-to-dock blur false 2>/dev/null || true
 fi
 
 # Spotlight: Ulauncher with the macOS Spotlight theme on Super(⌘)+Space.

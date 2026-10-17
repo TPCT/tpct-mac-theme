@@ -63,9 +63,14 @@ windowtitle .subtitle { font-size: 11px; color: $mac_fg_dim; }
 // ───────────────────────── Traffic lights ─────────────────────────
 
 windowcontrols { border-spacing: 8px; margin: 0 4px; }
+// Listed with headerbar/.image-button so these beat the header-bar button rules
+// (window controls are image buttons inside the header bar).
 windowcontrols > button,
 windowcontrols > button:hover,
 windowcontrols > button:active,
+headerbar windowcontrols > button.image-button,
+headerbar windowcontrols > button.image-button:hover,
+headerbar windowcontrols > button.image-button:active,
 headerbar.default-decoration windowcontrols > button {
   min-width: 14px;
   min-height: 14px;
@@ -540,3 +545,24 @@ toast { border-radius: 999px; background-color: $mac_popover; color: $mac_fg;
 .card { border-radius: $radius-card; background-color: $mac_card; box-shadow: 0 0 0 0.5px $mac_border; }
 statuspage > scrolledwindow > viewport > box > clamp > box > .title { font-weight: 700; }
 banner > revealer > widget { background-color: a($mac_accent, 0.15); }
+
+// ───────────────────────── Finder (Nautilus) & sidebars ─────────────────────────
+
+// macOS source lists have no title above them.
+.sidebar-pane headerbar windowtitle,
+.sidebar-pane headerbar .title { opacity: 0; }
+
+// Buttons inside sidebar rows (eject, etc.) are plain glyphs.
+.navigation-sidebar button,
+.navigation-sidebar button:hover,
+.navigation-sidebar button:active,
+.sidebar-pane .navigation-sidebar row button {
+  background: none;
+  box-shadow: none;
+  min-height: 20px;
+  min-width: 20px;
+  padding: 0 4px;
+  color: $mac_fg_dim;
+}
+.navigation-sidebar button:hover { color: $mac_fg; background-color: $mac_fill_hover; border-radius: 999px; }
+.navigation-sidebar > separator { margin: 6px 8px; }
