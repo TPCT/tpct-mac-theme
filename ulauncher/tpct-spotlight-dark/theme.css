@@ -10,7 +10,9 @@
     background-color: rgba(38, 38, 42, 0.94);
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 26px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    /* No drop shadow: Ulauncher's window is barely larger than the box, so a
+       shadow gets clipped into a visible grey rectangle. */
+    box-shadow: none;
     padding: 4px 6px;
 }
 
