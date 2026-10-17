@@ -10,9 +10,17 @@ window, .background, popover, tooltip, dialog, label {
 
 // ───────────────────────── Windows ─────────────────────────
 
-window.csd, window.csd > .titlebar, window.csd > contents {
+window.csd, window.csd > contents {
   border-radius: $radius-window;
 }
+// Title bars are rounded on top only; they sit flush on the window content.
+window.csd > .titlebar, window.csd > headerbar,
+headerbar.titlebar, headerbar.default-decoration, window.ssd-frame headerbar {
+  border-radius: $radius-window $radius-window 0 0;
+}
+window.maximized > .titlebar, window.maximized headerbar,
+window.tiled > .titlebar, window.fullscreen headerbar,
+window.maximized.ssd-frame headerbar { border-radius: 0; }
 window.csd {
   box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.35),
               0 10px 30px 4px rgba(0, 0, 0, 0.28),
