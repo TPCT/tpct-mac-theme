@@ -21,7 +21,8 @@ $tile-hover:   if($is-dark, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.08));
 $tile-active:  if($is-dark, rgba(255, 255, 255, 0.20), rgba(0, 0, 0, 0.12));
 $separator:    if($is-dark, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.10));
 $track:        if($is-dark, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.10));
-$shadow:       0 8px 28px rgba(0, 0, 0, if($is-dark, 0.45, 0.22));
+// Shadows fall downward only: St clips anything above a menu into hard corners.
+$shadow:       0 10px 18px -8px rgba(0, 0, 0, if($is-dark, 0.55, 0.28));
 
 // Menu bar text sits on the wallpaper, so it is white in both variants
 // unless the light variant's frosted bar is opaque enough for dark text.
