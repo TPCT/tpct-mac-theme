@@ -67,9 +67,18 @@ export class WindowButtons {
         this._sync();
     }
 
+    // Only windows whose own buttons the theme can hide while maximized: GTK
+    // apps and X11 apps framed by GNOME. Apps that draw their own buttons
+    // (Electron on Wayland, frameless X11) keep them, so nothing is doubled.
+    _ownButtonsHideable(w) {
+        if (w.get_client_type() === Meta.WindowClientType.X11)
+            return w.decorated;
+        return !!w.get_gtk_application_id?.();
+    }
+
     _sync() {
         const w = this._window;
-        const visible = !!w && w.is_maximized() && !Main.overview.visible;
+        const visible = !!w && w.is_maximized() && this._ownButtonsHideable(w) && !Main.overview.visible;
         if (visible !== this._box.visible || this._shownOnce !== true) {
             this._box.visible = visible;
             this._shownOnce = true;
