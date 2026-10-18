@@ -488,3 +488,10 @@ stage {
   &:hover { background-color: if($is-dark, rgba(80, 80, 86, 0.98), #ffffff); }
   &:active { background-color: if($is-dark, rgba(96, 96, 102, 0.98), rgba(235, 235, 238, 1)); }
 }
+
+// St clips box-shadows at the popup's bounds, which shows as grey squared-off
+// corners (most visible in Light). Menus and panels use a crisp edge instead.
+.popup-menu-content, .candidate-popup-content, .quick-settings, .quick-toggle-menu {
+  box-shadow: none !important;
+  border: 1px solid if($is-dark, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.14)) !important;
+}
