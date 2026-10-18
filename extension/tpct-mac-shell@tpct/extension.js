@@ -19,6 +19,7 @@ import {AppleMenu} from './appleMenu.js';
 import {WindowButtons} from './windowButtons.js';
 import {SpotlightButton} from './spotlightButton.js';
 import {CascadeController, CascadeMenuItem} from './cascade.js';
+import {DockSeparator} from './dockSeparator.js';
 
 const FINDER_IDS = ['org.gnome.Nautilus.desktop', 'nautilus.desktop'];
 
@@ -510,6 +511,7 @@ export default class TpctMacShell extends Extension {
         });
         this._globalMenu = new GlobalMenu();
         this._widgets = new DesktopWidgets();
+        this._dockSeparator = new DockSeparator();
 
         // Mission Control has no search field (Spotlight does search); the
         // app grid (Launchpad) keeps it.
@@ -664,6 +666,8 @@ export default class TpctMacShell extends Extension {
         this._schemeId = 0;
         this._interface = null;
 
+        this._dockSeparator?.destroy();
+        this._dockSeparator = null;
         this._widgets?.destroy();
         this._widgets = null;
         this._windowButtons?.destroy();
