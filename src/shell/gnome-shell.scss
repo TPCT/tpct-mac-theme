@@ -165,9 +165,10 @@ stage {
   -barlevel-background-color: $track;
   -barlevel-active-background-color: if($is-dark, #ffffff, $accent);
   -barlevel-overdrive-color: $red;
-  -slider-handle-radius: 9px;
-  -slider-handle-border-width: 0.5px;
-  -slider-handle-border-color: rgba(0, 0, 0, 0.15);
+  -slider-handle-radius: 10px;
+  // A defined edge so the white knob reads as a knob on light backgrounds too.
+  -slider-handle-border-width: 1px;
+  -slider-handle-border-color: if($is-dark, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.22));
 }
 
 // ───────────────────────── Control Center (quick settings) ─────────────────────────
