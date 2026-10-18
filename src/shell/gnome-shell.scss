@@ -266,12 +266,12 @@ stage {
 
 #dash .dash-background,
 #dashtodockContainer .dash-background {
-  background-color: if($is-dark, rgba(44, 44, 48, 0.62), rgba(246, 246, 248, 0.55));
+  background-color: if($is-dark, rgba(40, 40, 44, 0.80), rgba(242, 242, 245, 0.80));
   border: 1px solid if($is-dark, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.55));
   border-radius: 18px;
   box-shadow: none;
 }
-#dashtodockContainer .dash-background { padding: 4px 6px; }
+#dashtodockContainer .dash-background { padding: 6px 8px; }
 #dashtodockContainer #dash { padding: 0 4px; }
 #dash .dash-item-container .overview-tile .overview-icon,
 #dash .dash-item-container .show-apps .overview-icon {
@@ -473,3 +473,17 @@ stage {
 .switcher-list .item-box:selected StLabel { color: $fg; }
 .switcher-list .item-box { padding: 8px; }
 .switcher-list .item-box:selected { background-color: $tile-active; border-radius: 14px; }
+
+// Window close button in Mission Control: follows Light/Dark, smaller.
+.window-close, .screenshot-ui-close-button {
+  background-color: if($is-dark, rgba(60, 60, 64, 0.95), rgba(255, 255, 255, 0.95));
+  color: if($is-dark, #ffffff, rgba(0, 0, 0, 0.75));
+  border: 1px solid if($is-dark, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.10));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  padding: 2px;
+  height: 24px;
+  width: 24px;
+  StIcon { icon-size: 16px; }
+  &:hover { background-color: if($is-dark, rgba(80, 80, 86, 0.98), #ffffff); }
+  &:active { background-color: if($is-dark, rgba(96, 96, 102, 0.98), rgba(235, 235, 238, 1)); }
+}
