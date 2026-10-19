@@ -140,6 +140,7 @@
 .tpct-window-button.close { background-color: #ff5f57; }
 .tpct-window-button.minimize { background-color: #febc2e; }
 .tpct-window-button.maximize { background-color: #28c840; }
+/* Glyphs appear only while the group is hovered (macOS); the box has track_hover. */
 .tpct-window-button-icon { icon-size: 8px; color: transparent; }
 .tpct-window-buttons:hover .tpct-window-button-icon { color: rgba(0, 0, 0, 0.6); }
 

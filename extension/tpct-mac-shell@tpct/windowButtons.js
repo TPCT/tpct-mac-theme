@@ -2,11 +2,23 @@
 // between the  menu and the application menus.
 
 import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
+// macOS restore glyph = two diagonal arrows. WhiteSur maps every *-restore
+// name to overlapping windows, so load Adwaita's arrows by path.
+const RESTORE_ICON_PATH = '/usr/share/icons/Adwaita/symbolic/actions/view-restore-symbolic.svg';
+
+function restoreIcon() {
+    const file = Gio.File.new_for_path(RESTORE_ICON_PATH);
+    return file.query_exists(null)
+        ? new Gio.FileIcon({file})
+        : new Gio.ThemedIcon({name: 'window-restore-symbolic'});
+}
 
 export class WindowButtons {
     // onShown(visible) lets the caller hide the  button while these show.
@@ -14,6 +26,9 @@ export class WindowButtons {
         this._onShown = onShown;
         this._box = new St.BoxLayout({
             style_class: 'tpct-window-buttons',
+            // Track group hover so CSS reveals all three glyphs at once, like macOS.
+            reactive: true,
+            track_hover: true,
             y_align: Clutter.ActorAlign.CENTER,
             visible: false,
         });
@@ -23,7 +38,14 @@ export class WindowButtons {
                 can_focus: false,
                 track_hover: true,
                 y_align: Clutter.ActorAlign.CENTER,
-                child: new St.Icon({icon_name: icon, style_class: 'tpct-window-button-icon'}),
+                child: new St.Icon({
+                    gicon: icon,
+                    style_class: 'tpct-window-button-icon',
+                    x_align: Clutter.ActorAlign.CENTER,
+                    y_align: Clutter.ActorAlign.CENTER,
+                    x_expand: true,
+                    y_expand: true,
+                }),
             });
             b.connect('clicked', () => {
                 const w = this._window;
@@ -32,9 +54,9 @@ export class WindowButtons {
             });
             this._box.add_child(b);
         };
-        button('close', 'window-close-symbolic', w => w.delete(global.get_current_time()));
-        button('minimize', 'window-minimize-symbolic', w => w.minimize());
-        button('maximize', 'window-restore-symbolic', w => w.unmaximize());
+        button('close', new Gio.ThemedIcon({name: 'window-close-symbolic'}), w => w.delete(global.get_current_time()));
+        button('minimize', new Gio.ThemedIcon({name: 'window-minimize-symbolic'}), w => w.minimize());
+        button('maximize', restoreIcon(), w => w.unmaximize());
 
         // At the far left, where the  button sits; it is hidden while these show.
         Main.panel._leftBox.insert_child_at_index(this._box, 0);
