@@ -600,24 +600,27 @@ overlay-split-view, navigation-split-view { background-color: $mac_view; }
 // Collapsed (narrow) sidebars slide over the content: keep them flat.
 overlay-split-view.collapsed > .sidebar-pane { margin: 0; border-radius: 0; }
 
-// Toolbar buttons: round glass buttons like Tahoe's toolbar items.
+// Toolbar buttons: compact glyphs with a soft round highlight on hover.
 headerbar button.image-button:not(.titlebutton),
 headerbar menubutton.image-button > button,
 headerbar splitbutton > button,
 headerbar splitbutton > menubutton > button {
-  min-width: 30px;
-  min-height: 30px;
-  padding: 0 6px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0 4px;
   border-radius: 999px;
-  background-color: $mac_fill;
+  background-color: transparent;
 }
 headerbar button.image-button:not(.titlebutton):hover,
 headerbar menubutton.image-button > button:hover,
 headerbar splitbutton > button:hover,
 headerbar splitbutton > menubutton > button:hover { background-color: $mac_fill_hover; }
+headerbar button.image-button:not(.titlebutton):active,
+headerbar button.image-button:not(.titlebutton):checked,
+headerbar menubutton.image-button > button:checked { background-color: $mac_fill_active; }
 headerbar button.image-button:not(.titlebutton):disabled { background-color: transparent; opacity: 0.5; }
 headerbar splitbutton > button { border-radius: 999px 0 0 999px; }
-headerbar splitbutton > menubutton > button { border-radius: 0 999px 999px 0; min-width: 20px; padding: 0 4px; }
+headerbar splitbutton > menubutton > button { border-radius: 0 999px 999px 0; min-width: 16px; padding: 0 2px; }
 headerbar splitbutton > separator { background: none; }
 // Inside sidebars and segmented groups keep buttons bare.
 .sidebar-pane headerbar button.image-button:not(.titlebutton),
