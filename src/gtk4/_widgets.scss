@@ -737,13 +737,29 @@ window.ssd-frame headerbar { padding: 0 8px; }
 
 // Icon view: no tinted cell; the selected icon gets a soft grey box and the
 // name a blue pill, like Finder.
+// Finder never frames the whole cell: drop GTK's focus ring (outline on the
+// focused child) and any cell shadow, in every state.
 .nautilus-grid-view gridview > child,
 .nautilus-grid-view gridview > child:hover,
+.nautilus-grid-view gridview > child:focus,
+.nautilus-grid-view gridview > child:focus-visible,
+.nautilus-grid-view gridview > child:focus:focus-visible,
 .nautilus-grid-view gridview > child:selected,
-.nautilus-grid-view gridview > child:selected:hover {
+.nautilus-grid-view gridview > child:selected:hover,
+.nautilus-grid-view gridview > child:selected:focus,
+.nautilus-grid-view gridview > child:selected:focus-visible {
   background: none;
   box-shadow: none;
+  outline: none;
   color: $mac_fg;
+}
+.nautilus-grid-view gridview > child .nautilus-view-cell,
+.nautilus-grid-view gridview > child:hover .nautilus-view-cell,
+.nautilus-grid-view gridview > child:focus .nautilus-view-cell,
+.nautilus-grid-view gridview > child:focus-visible .nautilus-view-cell,
+.nautilus-grid-view gridview > child:selected .nautilus-view-cell {
+  box-shadow: none;
+  outline: none;
 }
 .nautilus-grid-view gridview > child:selected .nautilus-view-cell > :first-child {
   background-color: a($mac_fg_solid, 0.10);
@@ -767,4 +783,12 @@ window.ssd-frame headerbar { padding: 0 8px; }
   background-color: a($mac_fg_solid, 0.035);
 }
 .nautilus-list-view columnview > listview > row:selected { background-color: $mac_accent; color: #ffffff; }
+// No focus ring around the row; the accent fill already shows the selection.
+.nautilus-list-view columnview > listview > row,
+.nautilus-list-view columnview > listview > row:focus,
+.nautilus-list-view columnview > listview > row:focus-visible,
+.nautilus-list-view columnview > listview > row:focus:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
 columnview > header > button { font-weight: 500; font-size: 12px; color: $mac_fg_dim; }
