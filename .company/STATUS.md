@@ -10,6 +10,7 @@ Task: Menu-bar traffic lights never show their glyphs on hover (bug fix). Size: 
 | T-003 | Flat macOS-style ColumnView column headers (no pills) | done |
 | T-004 | Hide Resources when Activity Monitor is installed | done |
 | T-005 | Dark mode less black (macOS greys) | done |
+| T-006 | Global menu: prefetch lazy dbusmenu submenus (Electron) | done |
 
 ## Decisions log
 - 2026-10-19 (Tech Lead): Root cause is the missing `reactive`/`track_hover` on the `tpct-window-buttons` box; fix there so the whole group reveals glyphs together (macOS behaviour), rather than per-button hover.

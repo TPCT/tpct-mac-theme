@@ -193,6 +193,7 @@ export class DbusMenuSource {
         this._service = service;
         this._path = path;
         this._layout = null;
+        this._prefetched = new Set();
         this._changedCallbacks = [];
         const conn = Gio.DBus.session;
         this._signalIds = ['LayoutUpdated', 'ItemsPropertiesUpdated'].map(sig =>
@@ -236,6 +237,21 @@ export class DbusMenuSource {
                     this._changedCallbacks.forEach(cb => cb());
                     return GLib.SOURCE_REMOVE;
                 });
+            }
+            const pending = [];
+            const prefetch = ([id, props, children]) => {
+                if (props['children-display'] === 'submenu' && !children.length &&
+                    !this._prefetched.has(id)) {
+                    this._prefetched.add(id);
+                    pending.push(this._call('AboutToShow', new GLib.Variant('(i)', [id]), '(b)')
+                        .catch(() => {}));
+                }
+                children.forEach(prefetch);
+            };
+            prefetch(layout);
+            if (pending.length) {
+                await Promise.all(pending);
+                await this.refresh();
             }
         } catch (e) {
             // The application went away or does not implement the interface.

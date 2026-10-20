@@ -151,6 +151,11 @@ function fillMenu(menu, items, cascade = null) {
     const last = children[children.length - 1];
     if (last instanceof PopupMenu.PopupSeparatorMenuItem)
         last.destroy();
+    if (!menu._getMenuItems().length) {
+        const loading = new PopupMenu.PopupMenuItem('Loading…');
+        loading.setSensitive(false);
+        menu.addMenuItem(loading);
+    }
 }
 
 // ───────────────────────── Global menu ─────────────────────────
