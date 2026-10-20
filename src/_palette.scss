@@ -61,15 +61,15 @@ $dark: (
   fg-dim:        rgba(255, 255, 255, 0.55),
   fg-disabled:   rgba(255, 255, 255, 0.25),
 
-  window:        #1e1e20,
-  view:          #1c1c1e,
-  headerbar:     #1c1c1e,
-  sidebar:       #2a2a2d,
-  sidebar-2:     #242427,
+  window:        #2a2a2c,
+  view:          #1f1f21,
+  headerbar:     #2c2c2e,
+  sidebar:       #333336,
+  sidebar-2:     #2d2d30,
   card:          rgba(255, 255, 255, 0.05),
-  popover:       #2a2a2d,
-  dialog:        #2a2a2d,
-  tooltip:       #323235,
+  popover:       #323235,
+  dialog:        #303033,
+  tooltip:       #3c3c3f,
 
   control:       rgba(255, 255, 255, 0.12),
   control-hover: rgba(255, 255, 255, 0.16),
@@ -89,7 +89,7 @@ $dark: (
   knob:          #f0f0f2,
   segment:       rgba(255, 255, 255, 0.24),
   segment-fg:    #ffffff,
-  inactive-dot:  #4a4a4e,
+  inactive-dot:  #55555a,
 );
 
 // Traffic lights are the same in both variants.

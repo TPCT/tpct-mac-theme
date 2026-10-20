@@ -30,8 +30,8 @@ make_theme() {
 
 ACCENT='#0091ff'
 make_theme KvMojave TPCT-Mac-Dark \
-  window.color='#1e1e20' inactive.window.color='#1e1e20' \
-  base.color='#1c1c1e' inactive.base.color='#1c1c1e' \
+  window.color='#2a2a2c' inactive.window.color='#2a2a2c' \
+  base.color='#1f1f21' inactive.base.color='#1f1f21' \
   alt.base.color='#242427' inactive.alt.base.color='#242427' \
   button.color='#3a3a3d' tooltip.base.color='#323235' \
   highlight.color='#0091ff' inactive.highlight.color='#3a3a3d' \
