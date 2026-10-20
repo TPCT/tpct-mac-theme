@@ -229,6 +229,17 @@ org.gnome.Showtime.desktop|QuickTime Player
 org.gnome.Totem.desktop|QuickTime Player
 yelp.desktop|Tips
 NAMES
+# Hide Resources when Activity Monitor is installed.
+for dir in /usr/share/applications /var/lib/snapd/desktop/applications /var/lib/flatpak/exports/share/applications; do
+  [[ -f "$dir/org.gnome.SystemMonitor.desktop" ]] || continue
+  for dir in /usr/share/applications /var/lib/snapd/desktop/applications /var/lib/flatpak/exports/share/applications; do
+    src="$dir/net.nokyan.Resources.desktop"
+    [[ -f "$src" ]] || continue
+    sed -e '/^NoDisplay=/d' -e '/^\[Desktop Entry\]$/a\NoDisplay=true\nX-TPCT-Mac=true' "$src" > "$APPS/net.nokyan.Resources.desktop"
+    break
+  done
+  break
+done
 update-desktop-database "$APPS" 2>/dev/null || true
 
 # Qt apps: Kvantum theme generated from KvMojave with the TPCT Mac palette.
