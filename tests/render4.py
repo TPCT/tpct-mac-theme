@@ -9,7 +9,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GLib, Gtk  # noqa: E402
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
 css_file, out_png = sys.argv[1], sys.argv[2]
 scheme = sys.argv[3] if len(sys.argv) > 3 else "dark"
@@ -43,6 +43,33 @@ def build_sidebar():
     tv.set_content(sw)
     page.set_child(tv)
     return page
+
+
+def build_columnview():
+    store = Gio.ListStore(item_type=Gtk.StringObject)
+    for s in ("Report.pdf|1.2 MB|PDF document",
+              "Notes.txt|4 KB|Plain text",
+              "Photos|--|Folder"):
+        store.append(Gtk.StringObject.new(s))
+    cv = Gtk.ColumnView(show_column_separators=False, show_row_separators=False)
+    sort_model = Gtk.SortListModel(model=store, sorter=cv.get_sorter())
+    cv.set_model(Gtk.NoSelection(model=sort_model))
+    first = None
+    for idx, title in enumerate(("Name", "Size", "Kind")):
+        fac = Gtk.SignalListItemFactory()
+        fac.connect("setup", lambda f, li: li.set_child(Gtk.Label(xalign=0)))
+        fac.connect("bind", lambda f, li, i=idx:
+                    li.get_child().set_label(li.get_item().get_string().split("|")[i]))
+        col = Gtk.ColumnViewColumn(title=title, factory=fac, expand=(idx == 0))
+        col.set_sorter(Gtk.CustomSorter.new(
+            lambda a, b, _d, i=idx: (a.get_string().split("|")[i] > b.get_string().split("|")[i])
+            - (a.get_string().split("|")[i] < b.get_string().split("|")[i]), None))
+        cv.append_column(col)
+        if first is None:
+            first = col
+    cv.sort_by_column(first, Gtk.SortType.ASCENDING)
+    frame = Gtk.Frame(child=cv)
+    return frame
 
 
 def build_content():
@@ -127,6 +154,7 @@ def build_content():
     tabs.append(Gtk.Label(label="Secondary text", css_classes=["dim-label"]))
     tabs.append(Gtk.Label(label="Heading", css_classes=["heading"]))
     box.append(tabs)
+    box.append(build_columnview())
 
     sw = Gtk.ScrolledWindow(vexpand=True)
     sw.set_child(box)
@@ -153,7 +181,7 @@ def main():
             Gdk.Display.get_default(), prov, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         win = Adw.ApplicationWindow(application=app, title="Theme test")
-        win.set_default_size(900, 640)
+        win.set_default_size(900, 760)
         split = Adw.NavigationSplitView()
         split.set_sidebar(build_sidebar())
         content, focus_entry = build_content()

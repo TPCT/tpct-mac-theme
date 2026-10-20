@@ -791,4 +791,54 @@ window.ssd-frame headerbar { padding: 0 8px; }
   outline: none;
   box-shadow: none;
 }
-columnview > header > button { font-weight: 500; font-size: 12px; color: $mac_fg_dim; }
+// Column headers (ColumnView): flat macOS table header, never a pill button.
+columnview > header {
+  background: none;
+  box-shadow: inset 0 -1px $mac_separator;
+}
+columnview > header > button,
+columnview > header > button:hover,
+columnview > header > button:active,
+columnview > header > button:checked,
+columnview > header > button:disabled,
+columnview > header > button:backdrop,
+columnview > header > button:focus,
+columnview > header > button:focus-visible,
+columnview > header > button:focus:focus-visible {
+  min-height: 22px;
+  min-width: 0;
+  padding: 2px 8px;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: inset -1px 0 $mac_separator;
+  outline: none;
+  font-weight: 500;
+  font-size: 12px;
+  color: $mac_fg_dim;
+}
+columnview > header > button:last-child,
+columnview > header > button:last-child:hover,
+columnview > header > button:last-child:active,
+columnview > header > button:last-child:checked,
+columnview > header > button:last-child:disabled,
+columnview > header > button:last-child:backdrop,
+columnview > header > button:last-child:focus,
+columnview > header > button:last-child:focus-visible,
+columnview > header > button:last-child:focus:focus-visible {
+  box-shadow: none;
+}
+columnview > header > button:hover { background-color: a($mac_fg, 0.04); }
+columnview > header > button:active { background-color: a($mac_fg, 0.08); }
+columnview > header > button:disabled { color: $mac_fg_disabled; }
+// libadwaita styles the inner title box (82% size, bold, 40% colour); reset it to the button's values.
+columnview > header > button > box,
+columnview > header > button:hover > box,
+columnview > header > button:active > box,
+columnview > header > button:checked > box,
+columnview > header > button:disabled > box,
+columnview > header > button:backdrop > box {
+  font-size: 12px;
+  font-weight: 500;
+  color: inherit;
+}
