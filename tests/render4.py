@@ -72,6 +72,20 @@ def build_columnview():
     return frame
 
 
+def build_treeview():
+    store = Gtk.ListStore(str, int, str)
+    store.append(["Activity Monitor", 1234, "2.4%"])
+    store.append(["Files", 5678, "0.1%"])
+    tree = Gtk.TreeView(model=store)
+    for idx, title in enumerate(("Name", "ID", "CPU")):
+        col = Gtk.TreeViewColumn(title, Gtk.CellRendererText(), text=idx)
+        col.set_expand(idx == 0)
+        col.set_sort_column_id(idx)
+        col.set_clickable(True)
+        tree.append_column(col)
+    return Gtk.Frame(child=tree)
+
+
 def build_content():
     page = Adw.NavigationPage(title="Documents")
     tv = Adw.ToolbarView()
@@ -156,6 +170,23 @@ def build_content():
     box.append(tabs)
     box.append(build_columnview())
 
+    stack = Adw.ViewStack()
+    for name, title, icon in (
+        ("resources", "Resources", "utilities-system-monitor-symbolic"),
+        ("processes", "Processes", "system-run-symbolic"),
+        ("filesystems", "File Systems", "drive-harddisk-symbolic"),
+    ):
+        child = build_treeview() if name == "processes" else Gtk.Label(label=title)
+        stack.add_titled_with_icon(child, name, title, icon)
+    stack.set_visible_child_name("processes")
+    switcher = Adw.ViewSwitcher(policy=Adw.ViewSwitcherPolicy.WIDE, stack=stack)
+    monitor_header = Adw.HeaderBar()
+    monitor_header.set_show_start_title_buttons(False)
+    monitor_header.set_show_end_title_buttons(False)
+    monitor_header.set_title_widget(switcher)
+    box.append(monitor_header)
+    box.append(stack)
+
     sw = Gtk.ScrolledWindow(vexpand=True)
     sw.set_child(box)
     tv.set_content(sw)
@@ -181,7 +212,7 @@ def main():
             Gdk.Display.get_default(), prov, Gtk.STYLE_PROVIDER_PRIORITY_USER)
 
         win = Adw.ApplicationWindow(application=app, title="Theme test")
-        win.set_default_size(900, 760)
+        win.set_default_size(900, 900)
         split = Adw.NavigationSplitView()
         split.set_sidebar(build_sidebar())
         content, focus_entry = build_content()
